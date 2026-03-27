@@ -493,10 +493,10 @@
   <!-- Phone Mockups -->
   <div class="phones-showcase">
     <div class="phone-frame left">
-      <img src="screen1.jpeg" alt="Qawama Dashboard — Budget overview, accounts, and daily spending">
+      <img id="phone-screen1" src="screen1.jpeg" alt="Qawama Dashboard — Budget overview, accounts, and daily spending">
     </div>
     <div class="phone-frame right">
-      <img src="screen2.jpeg" alt="Qawama Dashboard — Categories, upcoming payments, and recent transactions">
+      <img id="phone-screen2" src="screen2.jpeg" alt="Qawama Dashboard — Categories, upcoming payments, and recent transactions">
     </div>
   </div>
 </section>
@@ -574,7 +574,7 @@
   <p data-en="Cloud backup is completely optional. If you choose to enable it, your data is encrypted on your device with AES-256 encryption using a passphrase only you know. The encrypted data is stored on Supabase. We cannot read your backup — only you can decrypt it with your passphrase." data-ar="النسخ الاحتياطي السحابي اختياري تماماً. إذا اخترت تفعيله، يتم تشفير بياناتك على جهازك بتشفير AES-256 باستخدام عبارة مرور تعرفها أنت فقط. البيانات المشفرة تُخزن على Supabase. لا نستطيع قراءة نسختك الاحتياطية — أنت فقط من يمكنه فك تشفيرها.">Cloud backup is completely optional. If you choose to enable it, your data is encrypted on your device with AES-256 encryption using a passphrase only you know. The encrypted data is stored on Supabase. We cannot read your backup — only you can decrypt it with your passphrase.</p>
 
   <h3 data-en="No Ads, No Tracking" data-ar="بدون إعلانات، بدون تتبع">No Ads, No Tracking</h3>
-  <p data-en="Qawama has no advertisements, no analytics trackers, and no third-party SDKs that collect your data. We don't sell, share, or monetize your information in any way." data-ar="قواما لا تحتوي على إعلانات، ولا أدوات تتبع تحليلية، ولا أدوات تطوير خارجية تجمع بياناتك. لا نبيع أو نشارك أو نستثمر معلوماتك بأي شكل.">Qawama has no advertisements, no analytics trackers, and no third-party SDKs that collect your data. We don't sell, share, or monetize your information in any way.</p>
+  <p data-en="Qawama has no advertisements, no analytics trackers, and no third-party advertising or analytics SDKs. Firebase is used solely for authentication and push notifications. We don't sell, share, or monetize your information in any way." data-ar="قواما لا تحتوي على إعلانات، ولا أدوات تتبع تحليلية، ولا أدوات إعلانية أو تحليلية خارجية. يُستخدم Firebase فقط للمصادقة والإشعارات. لا نبيع أو نشارك أو نستثمر معلوماتك بأي شكل.">Qawama has no advertisements, no analytics trackers, and no third-party advertising or analytics SDKs. Firebase is used solely for authentication and push notifications. We don't sell, share, or monetize your information in any way.</p>
 
   <h3 data-en="Contact" data-ar="تواصل معنا">Contact</h3>
   <p data-en='For questions or feedback, email us at <a href="mailto:qawama.app@gmail.com">qawama.app@gmail.com</a>' data-ar='للأسئلة أو الملاحظات، راسلنا على <a href="mailto:qawama.app@gmail.com">qawama.app@gmail.com</a>'>For questions or feedback, email us at <a href="mailto:qawama.app@gmail.com">qawama.app@gmail.com</a></p>
@@ -600,6 +600,7 @@
 
     document.querySelector('.lang-toggle').textContent = isArabic ? 'English' : 'العربية';
 
+    // Swap text content
     document.querySelectorAll('[data-en][data-ar]').forEach(function(el) {
       var text = isArabic ? el.getAttribute('data-ar') : el.getAttribute('data-en');
       if (text && text.includes('<')) {
@@ -608,6 +609,10 @@
         el.textContent = text;
       }
     });
+
+    // Swap phone screenshots
+    document.getElementById('phone-screen1').src = isArabic ? 'screen1_ar.jpeg' : 'screen1.jpeg';
+    document.getElementById('phone-screen2').src = isArabic ? 'screen2_ar.jpeg' : 'screen2.jpeg';
   }
 </script>
 </body>
