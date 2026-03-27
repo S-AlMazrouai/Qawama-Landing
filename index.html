@@ -533,4 +533,11 @@
 
     document.querySelector('.lang-toggle').textContent = isArabic ? 'English' : 'العربية';
 
-    document.querySelectorAll('[data-en]').fo
+    document.querySelectorAll('[data-en]').forEach(function(el) {
+      el.textContent = isArabic ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    });
+  }
+</script>
+
+</body>
+</html>
