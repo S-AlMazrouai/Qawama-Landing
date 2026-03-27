@@ -598,11 +598,17 @@
     document.documentElement.lang = isArabic ? 'ar' : 'en';
     document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
 
-    // Update toggle button text
     document.querySelector('.lang-toggle').textContent = isArabic ? 'English' : 'العربية';
 
-    // Swap content only on elements that have both data-en and data-ar
     document.querySelectorAll('[data-en][data-ar]').forEach(function(el) {
-      var enText = el.getAttribute('data-en');
-      var arText = el.getAttribute('data-ar');
-      // Use innerHTML for e
+      var text = isArabic ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+      if (text && text.includes('<')) {
+        el.innerHTML = text;
+      } else if (text) {
+        el.textContent = text;
+      }
+    });
+  }
+</script>
+</body>
+</html>
