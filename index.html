@@ -531,21 +531,20 @@
     document.documentElement.lang = isArabic ? 'ar' : 'en';
     document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
 
+    // Update toggle button text
     document.querySelector('.lang-toggle').textContent = isArabic ? 'English' : 'العربية';
 
-    document.querySelectorAll('[data-en]').forEach(function(el) {
+    // Swap content only on elements that have both data-en and data-ar
+    document.querySelectorAll('[data-en][data-ar]').forEach(function(el) {
       var enText = el.getAttribute('data-en');
       var arText = el.getAttribute('data-ar');
+      // Use innerHTML for elements containing HTML (like spans in the headline)
       if (enText.indexOf('<') !== -1 || arText.indexOf('<') !== -1) {
         el.innerHTML = isArabic ? arText : enText;
       } else {
         el.textContent = isArabic ? arText : enText;
       }
     });
-
-    // Swap tagline visibility
-    document.querySelector('.tagline-en').style.display = isArabic ? 'none' : '';
-    document.querySelector('.tagline-ar').style.display = isArabic ? '' : 'none';
   }
 </script>
 
