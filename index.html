@@ -159,6 +159,63 @@
     height: 20px;
   }
 
+  /* --- PHONE MOCKUP --- */
+  .phones-showcase {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 60px;
+    perspective: 1200px;
+    animation: fadeUp 1s ease 0.7s both;
+  }
+
+  .phone-frame {
+    width: 220px;
+    height: 460px;
+    border-radius: 28px;
+    border: 3px solid rgba(0, 208, 156, 0.3);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 208, 156, 0.08);
+    background: var(--dark2);
+    flex-shrink: 0;
+  }
+
+  .phone-frame.left {
+    transform: rotateY(12deg) rotateX(2deg) rotateZ(-1deg);
+  }
+
+  .phone-frame.right {
+    transform: rotateY(-12deg) rotateX(2deg) rotateZ(1deg);
+  }
+
+  .phone-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(0,208,156,0.04) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @media (max-width: 600px) {
+    .phones-showcase { gap: 16px; margin-top: 40px; }
+    .phone-frame { width: 150px; height: 320px; border-radius: 20px; }
+    .phone-frame.left { transform: rotateY(8deg) rotateX(1deg); }
+    .phone-frame.right { transform: rotateY(-8deg) rotateX(1deg); }
+  }
+
   /* --- VERSE --- */
   .verse-section {
     padding: 80px 24px;
@@ -432,6 +489,16 @@
     </a>
     <a href="#privacy" class="btn btn-outline" data-en="Privacy Policy" data-ar="سياسة الخصوصية">Privacy Policy</a>
   </div>
+
+  <!-- Phone Mockups -->
+  <div class="phones-showcase">
+    <div class="phone-frame left">
+      <img src="screen1.jpg" alt="Qawama Dashboard — Budget overview, accounts, and daily spending">
+    </div>
+    <div class="phone-frame right">
+      <img src="screen2.jpg" alt="Qawama Dashboard — Categories, upcoming payments, and recent transactions">
+    </div>
+  </div>
 </section>
 
 <!-- VERSE -->
@@ -538,15 +605,4 @@
     document.querySelectorAll('[data-en][data-ar]').forEach(function(el) {
       var enText = el.getAttribute('data-en');
       var arText = el.getAttribute('data-ar');
-      // Use innerHTML for elements containing HTML (like spans in the headline)
-      if (enText.indexOf('<') !== -1 || arText.indexOf('<') !== -1) {
-        el.innerHTML = isArabic ? arText : enText;
-      } else {
-        el.textContent = isArabic ? arText : enText;
-      }
-    });
-  }
-</script>
-
-</body>
-</html>
+      // Use innerHTML for e
