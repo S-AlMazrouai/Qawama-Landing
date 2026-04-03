@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قواما — سياسة حذف البيانات</title>
+<meta name="description" content="تعرف على كيفية حذف حسابك وبياناتك في قواما. جميع عمليات الحذف فورية ولا يتم الاحتفاظ بأي بيانات.">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #00D09C;
+    --dark: #0A1628;
+    --dark2: #0E1E34;
+    --dark3: #132842;
+    --text-muted: #7A8BA0;
+    --glow: rgba(0, 208, 156, 0.15);
+    --glow-strong: rgba(0, 208, 156, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: #E8ECF1;
+    font-family: 'Amiri', 'Outfit', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  section { position: relative; z-index: 1; }
+
+  .privacy-section {
+    padding: 80px 24px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .privacy-section h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .privacy-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 28px 0 12px;
+  }
+
+  .privacy-section p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  .privacy-section a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .privacy-section a:hover { text-decoration: underline; }
+
+  .privacy-section ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .privacy-section li {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    padding-right: 20px;
+    position: relative;
+  }
+
+  .privacy-section li::before {
+    content: '\2190';
+    position: absolute;
+    right: 0;
+    color: var(--accent);
+  }
+
+  .footer {
+    padding: 40px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .footer-logo {
+    height: 40px;
+    margin-bottom: 12px;
+  }
+
+  .footer p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .footer a:hover { text-decoration: underline; }
+
+  .footer-links {
+    margin-top: 12px;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .back-link:hover { text-decoration: underline; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .privacy-section { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="privacy-section" style="animation: fadeUp 1s ease both;">
+  <a href="index.html" class="back-link">الرجوع للرئيسية &rarr;</a>
+
+  <h2>سياسة حذف البيانات</h2>
+
+  <p><em>آخر تحديث: أبريل 2026</em></p>
+
+  <h3>حذف حسابك</h3>
+  <p>يمكنك حذف حسابك في قواما وجميع البيانات المرتبطة به نهائياً باستخدام إحدى الطريقتين التاليتين:</p>
+  <ul>
+    <li>من داخل التطبيق: الإعدادات &gt; الحساب &gt; حذف الحساب</li>
+    <li>بإرسال طلب عبر البريد الإلكتروني إلى <a href="mailto:qawama.app@gmail.com">qawama.app@gmail.com</a></li>
+  </ul>
+
+  <p>عند حذف حسابك، يتم حذف البيانات التالية نهائياً:</p>
+  <ul>
+    <li>سجل المصادقة في Firebase</li>
+    <li>جميع بيانات النسخ الاحتياطي السحابي المخزنة على Supabase</li>
+  </ul>
+
+  <p>جميع البيانات المحلية على جهازك (المعاملات، الميزانيات، التصنيفات) تُحذف أيضاً عند إلغاء تثبيت التطبيق. لا يتم الاحتفاظ بأي شيء.</p>
+
+  <h3>حذف بياناتك دون حذف حسابك</h3>
+  <p>إذا أردت مسح بياناتك مع الاحتفاظ بحسابك، يمكنك ذلك من داخل التطبيق:</p>
+  <ul>
+    <li>الإعدادات &gt; البيانات &gt; مسح جميع البيانات — يحذف جميع المعاملات والميزانيات والتصنيفات المحلية من جهازك</li>
+    <li>الإعدادات &gt; النسخ الاحتياطي &gt; حذف النسخة الاحتياطية — يزيل النسخة الاحتياطية المشفرة من Supabase</li>
+  </ul>
+
+  <h3>الاحتفاظ بالبيانات</h3>
+  <p>لا تحتفظ قواما بأي من بياناتك بعد طلب الحذف. جميع عمليات الحذف فورية ونهائية. لا توجد فترة استرداد أو مهلة.</p>
+
+  <h3>تواصل معنا</h3>
+  <p>لأي طلبات حذف بيانات أو استفسارات، راسلنا على <a href="mailto:qawama.app@gmail.com">qawama.app@gmail.com</a></p>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <img src="data:image/png;base64,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" alt="قواما" class="footer-logo">
+  <p>&copy; 2026 قواما.</p>
+  <div class="footer-links">
+    <a href="index.html">الرئيسية</a>
+    <a href="index.html#privacy">سياسة الخصوصية</a>
+    <a href="mailto:qawama.app@gmail.com">تواصل</a>
+  </div>
+</footer>
+
+</body>
+</html>
