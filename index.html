@@ -3,621 +3,1379 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qawama (قواما) — Balanced spending, blessed living</title>
-<meta name="description" content="Qawama is a smart budgeting app that automatically tracks, categorizes, and analyzes your transactions. Built for Oman and the GCC.">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Qawama (قواما) — Spend with balance.</title>
+<meta name="description" content="Qawama is a budgeting companion built on a single Quranic principle: spending that sits between excess and stinting. Reads your bank SMS on-device, classifies every transaction, and shows you which side of the line you stand on. Built for Oman and the GCC.">
+<meta name="theme-color" content="#ECE3CC">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='none' stroke='%23B8552E' stroke-width='2' stroke-linejoin='miter' d='M32 0 L37.6 18.6 L55 9.4 L45.8 26.4 L64 32 L45.8 37.6 L55 54.6 L37.6 45.4 L32 64 L26.4 45.4 L9 54.6 L18.2 37.6 L0 32 L18.2 26.4 L9 9.4 L26.4 18.6 Z'/%3E%3C/svg%3E">
+
 <style>
+  /* =========================================================
+     DESIGN TOKENS — Suhuf direction
+     ========================================================= */
   :root {
-    --accent: #00D09C;
-    --dark: #0A1628;
-    --dark2: #0E1E34;
-    --dark3: #132842;
-    --text-muted: #7A8BA0;
-    --glow: rgba(0, 208, 156, 0.15);
-    --glow-strong: rgba(0, 208, 156, 0.3);
+    --bg:        #ECE3CC;
+    --bg-2:      #E3D9BD;
+    --surface:   #F3ECD8;
+    --surface-2: #EBE1C4;
+    --ink:       #1A2540;
+    --ink-2:     #2C3957;
+    --ink-3:     #4A5475;
+    --muted:     #7A7560;
+    --rule:      #C4B896;
+    --rule-2:    #D3C9AA;
+    --accent:    #B8552E;
+    --gold:      #A07C3E;
+    --pos:       #3F6B53;
+    --neg:       #8A3A2A;
+
+    --font-display: "Amiri", "Newsreader", serif;
+    --font-body:    "Newsreader", "IBM Plex Serif", Georgia, serif;
+    --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
+    --font-arabic:  "Amiri", "IBM Plex Sans Arabic", serif;
+    --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
   body {
-    background: var(--dark);
-    color: #E8ECF1;
-    font-family: 'Outfit', sans-serif;
-    overflow-x: hidden;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  img, svg { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; }
+
+  /* =========================================================
+     TYPE CLASSES
+     ========================================================= */
+  .qw-display { font-family: var(--font-display); font-weight: 500; line-height: 1.08; letter-spacing: -0.005em; }
+  .qw-arabic  { font-family: var(--font-arabic); direction: rtl; font-weight: 400; }
+  .qw-eyebrow {
+    font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--muted); font-weight: 500;
+  }
+  .qw-margin {
+    font-family: var(--font-display); font-style: italic; font-size: 12px;
+    color: var(--gold); letter-spacing: 0.01em;
+  }
+  .qw-num {
+    font-variant-numeric: tabular-nums oldstyle-nums;
+    font-feature-settings: "tnum", "onum";
+    font-family: var(--font-display);
+  }
+  .qw-num-lining {
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: "tnum", "lnum";
+    font-family: var(--font-mono);
+  }
+  .qw-page-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 8px; font-family: var(--font-sans); font-size: 10px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  }
+  .qw-page-header .ar {
+    text-transform: none; letter-spacing: 0; font-style: italic;
+    font-family: var(--font-arabic); color: var(--gold); font-size: 13px;
   }
 
-  /* Noise texture overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
+  /* =========================================================
+     LAYOUT — container
+     ========================================================= */
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 64px; }
+
+  /* =========================================================
+     NAV
+     ========================================================= */
+  .nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 64px; border-bottom: 1px solid var(--rule);
+    max-width: 1280px; margin: 0 auto;
   }
-
-  section { position: relative; z-index: 1; }
-
-  /* --- HERO --- */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 24px;
-    position: relative;
+  .nav__brand { display: flex; align-items: center; gap: 12px; }
+  .nav__brand .mark { color: var(--accent); }
+  .nav__brand .word { font-family: var(--font-display); font-size: 22px; color: var(--ink); letter-spacing: -0.005em; font-weight: 500; }
+  .nav__brand .word-ar { font-family: var(--font-arabic); font-size: 22px; color: var(--accent); }
+  .nav__links { display: flex; gap: 36px; align-items: center; }
+  .nav__link { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .nav__link .en { font-family: var(--font-display); font-size: 14px; color: var(--ink-2); font-weight: 500; }
+  .nav__link .ar { font-family: var(--font-arabic); font-size: 11px; color: var(--gold); font-style: italic; }
+  .nav__link:hover .en { color: var(--accent); }
+  .lang-toggle {
+    background: transparent; border: none; padding: 6px 8px; color: var(--accent);
+    font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 600;
   }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -200px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: var(--glow);
-    filter: blur(120px);
-    pointer-events: none;
-  }
-
-  .logo-img {
-    height: 100px;
-    margin-bottom: 24px;
-    animation: fadeUp 1s ease both;
-  }
-
-  .tagline-en {
-    font-size: 18px;
-    font-weight: 300;
-    color: var(--text-muted);
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    animation: fadeUp 1s ease 0.2s both;
-  }
-
-  .tagline-ar {
-    font-family: 'Amiri', serif;
-    font-size: 22px;
-    color: var(--accent);
-    margin-bottom: 48px;
-    animation: fadeUp 1s ease 0.3s both;
-  }
-
-  .hero-headline {
-    font-size: clamp(28px, 5vw, 48px);
-    font-weight: 600;
-    line-height: 1.3;
-    max-width: 700px;
-    margin-bottom: 20px;
-    animation: fadeUp 1s ease 0.4s both;
-  }
-
-  .hero-headline .accent { color: var(--accent); }
-
-  .hero-sub {
-    font-size: 17px;
-    color: var(--text-muted);
-    max-width: 520px;
-    line-height: 1.7;
-    margin-bottom: 40px;
-    animation: fadeUp 1s ease 0.5s both;
-  }
-
-  .cta-row {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: fadeUp 1s ease 0.6s both;
-  }
-
+  .lang-toggle:hover { color: var(--ink); }
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 32px;
-    border-radius: 12px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 26px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg);
+    font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase; border-radius: 0; transition: background .15s, color .15s, border-color .15s;
+  }
+  .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .btn--outline {
+    background: transparent; border: 1px solid var(--accent); color: var(--accent);
+  }
+  .btn--outline:hover { background: var(--accent); color: var(--bg); }
+  .btn--lg { padding: 18px 36px; font-size: 12px; }
+  .btn--sm { padding: 10px 22px; font-size: 11px; }
+
+  /* =========================================================
+     HERO — folio i
+     ========================================================= */
+  .hero { position: relative; padding: 72px 64px 80px; border-bottom: 1px solid var(--rule); overflow: hidden; max-width: 1280px; margin: 0 auto; }
+  .hero__deco {
+    position: absolute; right: -180px; top: -80px; pointer-events: none;
+    color: var(--accent); opacity: 0.063; /* ~ 0.18 * 0.35 (whisper) */
+  }
+  .hero__folio { position: absolute; left: 64px; right: 64px; top: 24px; }
+  .hero__grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 64px; align-items: center; position: relative; margin-top: 48px; }
+  .hero__eyebrow { margin-bottom: 28px; color: var(--accent); }
+  .hero__verse {
+    font-family: var(--font-arabic); font-size: 56px; line-height: 1.45;
+    color: var(--ink); margin: 0 0 4px; font-weight: 400; direction: rtl;
+  }
+  .hero__verse .accent { color: var(--accent); }
+  .hero__gloss {
+    font-family: var(--font-display); font-style: italic; font-size: 32px; line-height: 1.2;
+    color: var(--ink-2); margin: 0 0 36px; max-width: 520px; font-weight: 500;
+  }
+  .hero__body {
+    font-family: var(--font-body); font-size: 18px; line-height: 1.65;
+    color: var(--ink-2); max-width: 540px; margin: 0 0 36px;
+  }
+  .hero__body em { color: var(--ink); font-style: italic; }
+  .hero__ctas { display: flex; gap: 12px; margin-bottom: 40px; flex-wrap: wrap; }
+  .hero__spec { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  .hero__spec .k { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  .hero__spec .v { font-family: var(--font-display); font-size: 14px; color: var(--ink); font-weight: 500; margin-top: 4px; }
+  .hero__spec .ar { font-family: var(--font-arabic); font-size: 11px; color: var(--gold); margin-top: 2px; }
+  .hero__phone-wrap { display: flex; justify-content: center; align-items: center; position: relative; }
+  .hero__phone-wrap .margin-note { position: absolute; top: -28px; right: 0; }
+  .hero__phone-wrap .phone { transform: scale(0.78); transform-origin: center; }
+
+  /* =========================================================
+     VERSE FOLIO — folio ii
+     ========================================================= */
+  .verse-folio { padding: 96px 64px; background: var(--surface-2); border-bottom: 1px solid var(--rule); position: relative; overflow: hidden; }
+  .verse-folio__deco { position: absolute; inset: 0; pointer-events: none; color: var(--accent); opacity: 0.112; }
+  .verse-folio__page-header { max-width: 1152px; margin: 0 auto 64px; }
+  .verse-frame {
+    max-width: 920px; margin: 0 auto; position: relative;
+    padding: 92px 80px 88px; border: 1px double var(--accent); background: var(--bg);
+  }
+  .verse-frame::before {
+    content: ""; position: absolute; inset: 14px; border: 1px solid var(--accent);
+    opacity: 0.35; pointer-events: none;
+  }
+  .verse-frame__corner { position: absolute; }
+  .verse-frame__corner.tl { top: -1px; left: -1px; }
+  .verse-frame__corner.tr { top: -1px; right: -1px; transform: scaleX(-1); }
+  .verse-frame__corner.bl { bottom: -1px; left: -1px; transform: scaleY(-1); }
+  .verse-frame__corner.br { bottom: -1px; right: -1px; transform: scale(-1,-1); }
+
+  .verse-frame__head { display: flex; flex-direction: column; align-items: center; margin-bottom: 44px; }
+  .verse-frame__head .label { margin-top: 16px; color: var(--accent); font-size: 11px; font-family: var(--font-sans); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500; }
+  .verse-frame__head .ar { font-family: var(--font-arabic); font-size: 16px; color: var(--gold); margin-top: 6px; font-style: italic; }
+  .verse-frame__verse {
+    font-family: var(--font-arabic); font-size: 56px; line-height: 1.95; text-align: center;
+    color: var(--ink); margin: 0 0 36px; font-weight: 400; direction: rtl;
+  }
+  .verse-frame__verse .accent { color: var(--accent); }
+  .verse-frame__divider { display: flex; justify-content: center; margin-bottom: 32px; }
+  .verse-frame__translation {
+    font-family: var(--font-display); font-style: italic; font-size: 22px; line-height: 1.7;
+    color: var(--ink-2); text-align: center; margin: 0 auto 32px; max-width: 640px; font-weight: 500;
+  }
+  .verse-gloss { display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr; gap: 24px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--rule); }
+  .verse-gloss__sep { background: var(--rule); }
+  .verse-gloss__col { text-align: center; }
+  .verse-gloss__col .ar { font-family: var(--font-arabic); font-size: 32px; color: var(--ink); margin-bottom: 8px; }
+  .verse-gloss__col .ar.is-center { color: var(--accent); }
+  .verse-gloss__col .lat { font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 8px; }
+  .verse-gloss__col .lat.is-center { color: var(--accent); }
+  .verse-gloss__col p { font-family: var(--font-display); font-style: italic; font-size: 13px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+
+  /* =========================================================
+     HOW IT READS — folio iii
+     ========================================================= */
+  .how { padding: 96px 64px; border-bottom: 1px solid var(--rule); position: relative; overflow: hidden; max-width: 1280px; margin: 0 auto; }
+  .how__deco { position: absolute; left: -120px; bottom: -120px; pointer-events: none; color: var(--gold); opacity: 0.049; }
+  .how__title-row { display: grid; grid-template-columns: 0.4fr 2fr; gap: 64px; margin-bottom: 48px; align-items: baseline; }
+  .how__title { font-family: var(--font-display); font-size: 56px; color: var(--ink); margin: 0; letter-spacing: -0.015em; font-weight: 500; line-height: 1.05; }
+  .how__steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .how__step { padding: 40px 32px; position: relative; }
+  .how__step + .how__step { border-left: 1px solid var(--rule); }
+  .how__step-num-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; }
+  .how__step-num { font-family: var(--font-display); font-size: 44px; color: var(--accent); font-style: italic; line-height: 1; font-weight: 400; }
+  .how__step h3 { font-family: var(--font-display); font-size: 24px; color: var(--ink); margin: 0 0 6px; font-weight: 600; letter-spacing: -0.005em; }
+  .how__step .ar { font-family: var(--font-arabic); font-size: 18px; color: var(--accent); margin-bottom: 18px; font-style: italic; display: block; }
+  .how__step p { font-family: var(--font-body); font-size: 14px; line-height: 1.65; color: var(--ink-2); margin: 0; }
+  .qw-dropcap::first-letter {
+    font-family: var(--font-display); font-weight: 600; font-size: 4.2em; line-height: 0.85;
+    float: left; margin: 0.06em 0.08em 0 0; color: var(--accent);
   }
 
-  .btn-primary {
-    background: var(--accent);
-    color: var(--dark);
-  }
+  /* =========================================================
+     APP — folio iv
+     ========================================================= */
+  .app { padding: 96px 64px; border-bottom: 1px solid var(--rule); background: var(--surface-2); }
+  .app__inner { max-width: 1152px; margin: 0 auto; }
+  .app__intro { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: baseline; margin-bottom: 64px; }
+  .app__intro h2 { font-family: var(--font-display); font-size: 52px; color: var(--ink); margin: 0; letter-spacing: -0.015em; font-weight: 500; line-height: 1.05; }
+  .app__intro p { font-family: var(--font-body); font-size: 17px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+  .app__gallery { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; align-items: flex-start; }
+  .app__gallery-item { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .app__gallery-item .phone { transform: scale(0.7); transform-origin: top center; margin-bottom: -253px; }
+  .app__gallery-item .label { text-align: center; font-family: var(--font-sans); font-size: 10px; color: var(--accent); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 600; }
+  .app__gallery-item .ar { display: block; font-family: var(--font-arabic); font-size: 14px; color: var(--gold); margin-top: 4px; font-style: italic; }
 
-  .btn-primary:hover {
-    background: #00E4AC;
-    box-shadow: 0 8px 32px var(--glow-strong);
-    transform: translateY(-2px);
+  /* =========================================================
+     FEATURES — folio v (six entries)
+     ========================================================= */
+  .features { padding: 96px 64px; border-bottom: 1px solid var(--rule); max-width: 1280px; margin: 0 auto; }
+  .features__title-row { display: grid; grid-template-columns: 0.4fr 2fr; gap: 64px; margin-bottom: 56px; align-items: baseline; }
+  .features__title { font-family: var(--font-display); font-size: 52px; color: var(--ink); margin: 0; letter-spacing: -0.015em; font-weight: 500; line-height: 1.05; }
+  .features__title em { color: var(--accent); font-style: italic; }
+  .features__list { border-top: 1px solid var(--rule); }
+  .features__row {
+    display: grid; grid-template-columns: 60px 1.4fr 2fr 60px; gap: 24px;
+    padding: 32px 0; border-bottom: 1px solid var(--rule); align-items: baseline;
   }
+  .features__num { font-family: var(--font-display); font-size: 28px; color: var(--accent); font-style: italic; font-weight: 400; line-height: 1; font-variant-numeric: oldstyle-nums; font-feature-settings: "onum"; }
+  .features__heading { font-family: var(--font-display); font-size: 26px; color: var(--ink); margin: 0; font-weight: 600; letter-spacing: -0.005em; }
+  .features__ar { font-family: var(--font-arabic); font-size: 18px; color: var(--accent); margin-top: 6px; font-style: italic; display: block; }
+  .features__desc { font-family: var(--font-body); font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0; }
+  .features__motif { display: flex; justify-content: flex-end; }
 
-  .btn-outline {
-    background: transparent;
-    color: var(--accent);
-    border: 1.5px solid rgba(0, 208, 156, 0.3);
+  /* =========================================================
+     PRIVACY (slim folio)
+     ========================================================= */
+  .privacy { padding: 96px 64px; border-bottom: 1px solid var(--rule); max-width: 1280px; margin: 0 auto; }
+  .privacy__title-row { display: grid; grid-template-columns: 0.4fr 2fr; gap: 64px; margin-bottom: 56px; align-items: baseline; }
+  .privacy__title { font-family: var(--font-display); font-size: 48px; color: var(--ink); margin: 0; letter-spacing: -0.015em; font-weight: 500; line-height: 1.05; }
+  .privacy__title em { color: var(--accent); font-style: italic; }
+  .privacy__list { border-top: 1px solid var(--rule); }
+  .privacy__row {
+    display: grid; grid-template-columns: 60px 1.4fr 2fr; gap: 24px;
+    padding: 28px 0; border-bottom: 1px solid var(--rule); align-items: baseline;
   }
+  .privacy__num { font-family: var(--font-display); font-size: 24px; color: var(--accent); font-style: italic; font-weight: 400; line-height: 1; font-variant-numeric: oldstyle-nums; font-feature-settings: "onum"; }
+  .privacy__heading { font-family: var(--font-display); font-size: 22px; color: var(--ink); margin: 0; font-weight: 600; letter-spacing: -0.005em; }
+  .privacy__ar { font-family: var(--font-arabic); font-size: 16px; color: var(--accent); margin-top: 6px; font-style: italic; display: block; }
+  .privacy__desc { font-family: var(--font-body); font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0; }
+  .privacy__desc a { color: var(--accent); border-bottom: 1px solid var(--rule); }
+  .privacy__desc a:hover { border-color: var(--accent); }
 
-  .btn-outline:hover {
-    border-color: var(--accent);
-    background: var(--glow);
+  /* =========================================================
+     COLOPHON / CTA
+     ========================================================= */
+  .colophon { padding: 120px 64px; text-align: center; border-bottom: 1px solid var(--rule); background: var(--surface); }
+  .colophon__mark { display: flex; justify-content: center; }
+  .colophon__divider { display: flex; justify-content: center; margin-top: 8px; }
+  .colophon__title { font-family: var(--font-display); font-size: 64px; color: var(--ink); margin: 32px auto 16px; letter-spacing: -0.02em; font-weight: 500; max-width: 800px; line-height: 1.05; }
+  .colophon__title em { color: var(--accent); font-style: italic; }
+  .colophon__tag { font-family: var(--font-arabic); font-size: 28px; color: var(--gold); margin: 0 0 40px; font-style: italic; }
+  .colophon__ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* =========================================================
+     FOOTER
+     ========================================================= */
+  .footer {
+    padding: 32px 64px; display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 32px; align-items: center; max-width: 1280px; margin: 0 auto;
   }
+  .footer__brand { display: flex; align-items: center; gap: 10px; }
+  .footer__brand .word { font-family: var(--font-display); font-size: 13px; color: var(--ink-2); }
+  .footer__brand .ar { font-family: var(--font-arabic); font-size: 14px; color: var(--gold); font-style: italic; }
+  .footer__center { font-family: var(--font-display); font-style: italic; font-size: 12px; color: var(--gold); text-align: center; }
+  .footer__links { display: flex; gap: 20px; font-size: 12px; color: var(--muted); justify-content: flex-end; font-family: var(--font-sans); }
+  .footer__links a { color: var(--muted); }
+  .footer__links a:hover { color: var(--accent); }
 
-  .play-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  /* --- PHONE MOCKUP --- */
-  .phones-showcase {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    margin-top: 60px;
-    perspective: 1200px;
-    animation: fadeUp 1s ease 0.7s both;
-  }
-
-  .phone-frame {
-    width: 220px;
-    height: 460px;
-    border-radius: 28px;
-    border: 3px solid rgba(0, 208, 156, 0.3);
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 208, 156, 0.08);
-    background: var(--dark2);
+  /* =========================================================
+     PHONE MOCK — shared chrome
+     ========================================================= */
+  .phone {
+    width: 390px; height: 760px; border-radius: 44px; padding: 8px;
+    background: var(--ink); position: relative;
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,0.45), 0 0 0 1px var(--rule);
     flex-shrink: 0;
   }
-
-  .phone-frame.left {
-    transform: rotateY(12deg) rotateX(2deg) rotateZ(-1deg);
+  .phone__screen {
+    width: 100%; height: 100%; border-radius: 36px; overflow: hidden;
+    background: var(--bg); position: relative;
+    display: flex; flex-direction: column;
+  }
+  .phone__status {
+    position: absolute; top: 0; left: 0; right: 0; height: 36px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; font-size: 12px; font-weight: 600; color: var(--ink);
+    z-index: 20; font-family: var(--font-mono);
+  }
+  .phone__notch {
+    position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+    width: 90px; height: 24px; background: var(--ink); border-radius: 999px;
+  }
+  .phone__folio {
+    position: absolute; top: 38px; left: 0; right: 0; height: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px; font-family: var(--font-sans); font-size: 9px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); z-index: 5;
+  }
+  .phone__folio .ar {
+    letter-spacing: 0; font-size: 12px; color: var(--gold);
+    font-family: var(--font-arabic); text-transform: none; font-style: italic;
+  }
+  .phone__content {
+    position: absolute; top: 58px; left: 0; right: 0; bottom: 0;
+    overflow: hidden; display: flex; flex-direction: column;
   }
 
-  .phone-frame.right {
-    transform: rotateY(-12deg) rotateX(2deg) rotateZ(1deg);
+  /* Phone header (in-app) */
+  .ph-head { padding: 12px 22px 14px; border-bottom: 1px solid var(--rule);
+             display: flex; justify-content: space-between; align-items: baseline; }
+  .ph-head__title { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
+  .ph-head__title .en { font-family: var(--font-display); font-size: 24px; color: var(--ink); font-weight: 500; }
+  .ph-head__title .ar { font-family: var(--font-arabic); font-size: 20px; color: var(--accent); }
+  .ph-head__badge {
+    width: 36px; height: 36px; border: 1px solid var(--rule);
+    display: grid; place-items: center; background: var(--surface);
   }
 
-  .phone-frame img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
+  .ph-body { flex: 1; overflow: hidden; padding: 16px 18px 78px; }
+
+  /* Hero card on dashboard */
+  .ph-hero { position: relative; padding: 16px 14px; background: var(--surface); border: 1px solid var(--rule); }
+  .ph-hero__top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
+  .ph-hero__amt { display: flex; align-items: baseline; gap: 4px; margin-top: 2px; }
+  .ph-hero__amt .big { font-family: var(--font-display); font-variant-numeric: tabular-nums oldstyle-nums; font-feature-settings: "tnum","onum"; font-size: 34px; color: var(--ink); line-height: 1; }
+  .ph-hero__amt .small { font-family: var(--font-display); font-variant-numeric: tabular-nums oldstyle-nums; font-feature-settings: "tnum","onum"; font-size: 20px; color: var(--ink-2); line-height: 1; }
+  .ph-hero__amt .cur { font-family: var(--font-sans); font-size: 9px; color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase; margin-left: 4px; font-weight: 500; }
+  .ph-hero__right { text-align: right; }
+  .ph-hero__right .of { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  .ph-hero__right .lim { font-family: var(--font-display); font-variant-numeric: tabular-nums oldstyle-nums; font-feature-settings: "tnum","onum"; font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1; }
+  .ph-hero__right .rem { font-family: var(--font-display); font-style: italic; font-size: 11px; color: var(--gold); margin-top: 4px; }
+  .ph-hero__rule { height: 1px; background: var(--rule-2); margin: 8px 0 12px; }
+  .ph-verdict {
+    margin-top: 16px; padding: 9px 12px; background: var(--bg); border: 1px solid var(--accent);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ph-verdict .txt { font-family: var(--font-display); font-style: italic; font-size: 12px; line-height: 1.4; color: var(--ink); }
+
+  /* Qawam meter */
+  .meter { position: relative; }
+  .meter__top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .meter__top .ar { font-family: var(--font-arabic); font-size: 12px; color: var(--gold); font-style: italic; }
+  .meter__labels { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-bottom: 4px; direction: ltr; }
+  .meter__labels .ar { font-family: var(--font-arabic); font-size: 15px; color: var(--ink-2); }
+  .meter__labels .ar.is-c { color: var(--accent); text-align: center; font-weight: 700; font-size: 17px; }
+  .meter__labels .ar.is-l { text-align: left; }
+  .meter__labels .ar.is-r { text-align: right; }
+  .meter__ticks { height: 8px; position: relative; }
+  .meter__ticks span { position: absolute; top: 0; width: 1px; background: var(--rule); }
+  .meter__track { position: relative; height: 12px; background: var(--surface); border: 1px solid var(--rule); }
+  .meter__zone { position: absolute; left: 33%; right: 34%; top: 0; bottom: 0; background: var(--accent); opacity: 0.18; }
+  .meter__bound { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--accent); }
+  .meter__bound.l { left: 33%; } .meter__bound.r { left: 66%; }
+  .meter__pin {
+    position: absolute; top: 50%; left: 42%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 14px; height: 14px; background: var(--accent);
+    border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--accent);
+  }
+  .meter__nums { position: relative; height: 14px; margin-top: 4px; font-family: var(--font-sans); font-size: 9px; color: var(--muted); }
+  .meter__nums span { position: absolute; }
+  .meter__nums .a { left: 0; } .meter__nums .b { left: 33%; transform: translateX(-50%); color: var(--accent); } .meter__nums .c { left: 66%; transform: translateX(-50%); color: var(--accent); } .meter__nums .d { right: 0; }
+  .meter__lat { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-top: 2px; }
+  .meter__lat span { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  .meter__lat .is-c { text-align: center; color: var(--accent); }
+  .meter__lat .is-r { text-align: right; }
+
+  /* Section heading on phone */
+  .ph-section-head { margin-top: 22px; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .ph-section-head .en { font-family: var(--font-display); font-size: 16px; color: var(--ink); font-weight: 600; }
+  .ph-section-head .ar { font-family: var(--font-arabic); font-size: 13px; color: var(--gold); font-style: italic; }
+
+  /* Categories list */
+  .ph-cat-list { border-top: 1px solid var(--rule); }
+  .ph-cat { padding: 10px 0; border-bottom: 1px solid var(--rule-2); }
+  .ph-cat__top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .ph-cat__name { display: flex; align-items: baseline; gap: 8px; }
+  .ph-cat__name .en { font-family: var(--font-display); font-size: 14px; color: var(--ink); font-weight: 600; }
+  .ph-cat__name .ar { font-family: var(--font-arabic); font-size: 12px; color: var(--gold); }
+  .ph-cat__amt { font-family: var(--font-display); font-variant-numeric: tabular-nums oldstyle-nums; font-feature-settings: "tnum","onum"; font-size: 13px; color: var(--ink); font-weight: 600; }
+  .ph-cat__amt.over { color: var(--neg); }
+  .ph-cat__amt .lim { font-size: 10px; color: var(--muted); margin-left: 5px; font-weight: 400; }
+  .ph-cat__bar { height: 2px; background: var(--rule-2); overflow: hidden; }
+  .ph-cat__bar > i { display: block; height: 100%; background: var(--accent); }
+  .ph-cat__bar > i.over { background: var(--neg); }
+  .ph-badge {
+    display: inline-flex; align-items: center; padding: 2px 7px; font-family: var(--font-sans);
+    font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500;
+    color: var(--neg); border: 1px solid var(--neg); border-radius: 999px;
   }
 
-  .phone-frame::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(180deg, rgba(0,208,156,0.04) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 1;
+  /* Recent txns */
+  .ph-tx-list { border-top: 1px solid var(--rule); }
+  .ph-tx { display: grid; grid-template-columns: 56px 1fr auto; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--rule-2); align-items: baseline; }
+  .ph-tx__t { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  .ph-tx__m { font-family: var(--font-display); font-size: 13px; color: var(--ink); font-weight: 500; }
+  .ph-tx__c { font-family: var(--font-sans); font-size: 9px; color: var(--muted); margin-top: 2px; letter-spacing: 0.04em; }
+  .ph-tx__a { font-family: var(--font-display); font-variant-numeric: tabular-nums oldstyle-nums; font-feature-settings: "tnum","onum"; font-size: 13px; color: var(--ink); font-weight: 600; }
+
+  /* Bottom nav */
+  .ph-nav {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 14px 16px;
+    background: var(--bg); border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-around;
   }
+  .ph-nav__item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted); min-width: 50px; }
+  .ph-nav__item.on { color: var(--accent); }
+  .ph-nav__item .dot { width: 5px; height: 5px; background: var(--rule); transform: rotate(45deg); }
+  .ph-nav__item.on .dot { background: var(--accent); }
+  .ph-nav__item .lab { font-family: var(--font-sans); font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; }
+  .ph-nav__item.on .lab { font-weight: 600; }
 
-  @media (max-width: 600px) {
-    .phones-showcase { gap: 16px; margin-top: 40px; }
-    .phone-frame { width: 150px; height: 320px; border-radius: 20px; }
-    .phone-frame.left { transform: rotateY(8deg) rotateX(1deg); }
-    .phone-frame.right { transform: rotateY(-8deg) rotateX(1deg); }
+  /* Budgets phone — savings hero */
+  .ph-save {
+    position: relative; padding: 18px 16px; background: var(--accent); color: var(--bg);
+    border: 1px double var(--accent);
   }
+  .ph-save::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--bg); opacity: 0.3; pointer-events: none; }
+  .ph-save .eyebrow { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--bg); opacity: 0.75; font-weight: 500; }
+  .ph-save .ar { font-family: var(--font-arabic); font-size: 16px; color: var(--bg); margin-top: 5px; opacity: 0.85; font-style: italic; }
+  .ph-save__amt { display: flex; align-items: baseline; gap: 4px; margin-top: 12px; }
+  .ph-save__amt .big { font-family: var(--font-display); font-variant-numeric: tabular-nums oldstyle-nums; font-feature-settings: "tnum","onum"; font-size: 32px; font-weight: 600; line-height: 1; }
+  .ph-save__amt .small { font-family: var(--font-display); font-variant-numeric: tabular-nums oldstyle-nums; font-feature-settings: "tnum","onum"; font-size: 18px; opacity: 0.85; line-height: 1; }
+  .ph-save__amt .of { margin-left: auto; font-family: var(--font-sans); font-size: 10px; opacity: 0.75; }
+  .ph-save__bar { margin-top: 12px; height: 3px; background: rgba(243,236,216,0.25); }
+  .ph-save__bar > i { display: block; width: 57%; height: 100%; background: var(--bg); }
+  .ph-save__foot { display: flex; justify-content: space-between; margin-top: 8px; font-family: var(--font-sans); font-size: 9px; opacity: 0.85; letter-spacing: 0.08em; }
 
-  /* --- VERSE --- */
-  .verse-section {
-    padding: 80px 24px;
-    text-align: center;
-    position: relative;
+  /* Onboarding phone — verse-first */
+  .ph-onb { height: 100%; display: flex; flex-direction: column; padding: 18px 22px 24px; }
+  .ph-onb__frame { flex: 1; position: relative; padding: 28px 16px 24px; border: 1px double var(--accent); margin-top: 8px; }
+  .ph-onb__frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--accent); opacity: 0.35; pointer-events: none; }
+  .ph-onb__head { display: flex; flex-direction: column; align-items: center; margin-bottom: 18px; }
+  .ph-onb__head .label { font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-top: 8px; }
+  .ph-onb__head .ar { font-family: var(--font-arabic); font-size: 12px; color: var(--gold); margin-top: 4px; font-style: italic; }
+  .ph-onb__verse { font-family: var(--font-arabic); font-size: 24px; line-height: 2.05; text-align: center; color: var(--ink); margin: 0 0 16px; font-weight: 400; direction: rtl; }
+  .ph-onb__verse .accent { color: var(--accent); }
+  .ph-onb__div { display: flex; justify-content: center; margin-bottom: 14px; }
+  .ph-onb__gloss { font-family: var(--font-display); font-style: italic; font-size: 13px; line-height: 1.55; color: var(--ink-2); text-align: center; margin: 0 auto; max-width: 260px; }
+  .ph-onb__below { margin-top: 20px; }
+  .ph-onb__h { font-family: var(--font-display); font-size: 26px; line-height: 1.1; color: var(--ink); margin: 0 0 4px; text-align: center; letter-spacing: -0.01em; font-weight: 500; }
+  .ph-onb__h em { color: var(--accent); font-style: italic; }
+  .ph-onb__p { font-family: var(--font-body); font-size: 12px; line-height: 1.55; color: var(--muted); margin: 0 16px 18px; text-align: center; }
+  .ph-onb__btn {
+    width: 100%; padding: 12px 18px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg);
+    font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase; border-radius: 0; display: inline-flex; justify-content: center; align-items: baseline; gap: 8px;
   }
+  .ph-onb__btn .ar { font-family: var(--font-arabic); font-size: 15px; font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .ph-onb__dots { display: flex; justify-content: center; gap: 6px; margin-top: 16px; }
+  .ph-onb__dots i { width: 5px; height: 5px; background: var(--rule); transform: rotate(45deg); display: block; }
+  .ph-onb__dots i.on { width: 16px; background: var(--accent); }
 
-  .verse-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  /* Corner ornament (smaller in phone) */
+  .corner-orn { position: absolute; }
+
+  /* =========================================================
+     BILINGUAL SWAP — EN/ع toggle behavior
+     ========================================================= */
+  /* Default: English primary. When [data-script="ar"], swap visual emphasis on titles. */
+  html[data-script="ar"] body { font-family: var(--font-arabic); }
+  html[data-script="ar"] .hero__verse,
+  html[data-script="ar"] .verse-frame__verse { /* unchanged — already Arabic primary */ }
+
+  /* =========================================================
+     RESPONSIVE
+     ========================================================= */
+  @media (max-width: 1100px) {
+    .wrap, .nav, .footer { padding-left: 40px; padding-right: 40px; }
+    .hero, .verse-folio, .how, .app, .features, .privacy, .colophon { padding-left: 40px; padding-right: 40px; }
+    .hero__grid { gap: 40px; }
+    .verse-frame { padding: 72px 56px 64px; }
+    .verse-frame__verse { font-size: 44px; }
+    .hero__verse { font-size: 44px; }
   }
-
-  .verse-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 48px 40px;
-    background: linear-gradient(135deg, var(--dark2), var(--dark3));
-    border-radius: 24px;
-    border: 1px solid rgba(0, 208, 156, 0.1);
-    position: relative;
-    overflow: hidden;
+  @media (max-width: 880px) {
+    .nav { padding: 16px 24px; flex-wrap: wrap; gap: 16px; }
+    .nav__links { gap: 22px; flex-wrap: wrap; justify-content: flex-end; }
+    .hero, .verse-folio, .how, .app, .features, .privacy, .colophon { padding-left: 24px; padding-right: 24px; }
+    .hero { padding-top: 56px; padding-bottom: 56px; }
+    .hero__folio { display: none; }
+    .hero__grid { grid-template-columns: 1fr; margin-top: 16px; }
+    .hero__phone-wrap { margin-top: 32px; }
+    .hero__phone-wrap .margin-note { display: none; }
+    .hero__verse { font-size: 40px; }
+    .hero__gloss { font-size: 24px; }
+    .hero__body { font-size: 16px; }
+    .hero__spec { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .verse-folio { padding-top: 64px; padding-bottom: 64px; }
+    .verse-folio__page-header { margin-bottom: 40px; }
+    .verse-frame { padding: 56px 28px 48px; }
+    .verse-frame__verse { font-size: 32px; line-height: 1.95; }
+    .verse-frame__translation { font-size: 18px; }
+    .verse-gloss { grid-template-columns: 1fr; gap: 24px; }
+    .verse-gloss__sep { display: none; }
+    .how, .app, .features, .privacy { padding-top: 64px; padding-bottom: 64px; }
+    .how__title-row, .features__title-row, .privacy__title-row, .app__intro {
+      grid-template-columns: 1fr; gap: 20px; margin-bottom: 32px;
+    }
+    .how__title, .features__title, .privacy__title, .app__intro h2 { font-size: 36px; }
+    .how__steps { grid-template-columns: 1fr; }
+    .how__step + .how__step { border-left: none; border-top: 1px solid var(--rule); }
+    .features__row { grid-template-columns: 50px 1fr; row-gap: 8px; padding: 24px 0; }
+    .features__desc { grid-column: 1 / -1; padding-left: 74px; }
+    .features__motif { display: none; }
+    .privacy__row { grid-template-columns: 50px 1fr; row-gap: 8px; padding: 22px 0; }
+    .privacy__desc { grid-column: 1 / -1; padding-left: 74px; }
+    .app__gallery { gap: 24px; }
+    .app__gallery-item .phone { transform: scale(0.6); margin-bottom: -304px; }
+    .colophon { padding: 80px 24px; }
+    .colophon__title { font-size: 44px; }
+    .colophon__tag { font-size: 22px; }
+    .footer { grid-template-columns: 1fr; text-align: center; gap: 12px; padding: 28px 24px; }
+    .footer__links { justify-content: center; flex-wrap: wrap; }
   }
-
-  .verse-container::before {
-    content: '"';
-    position: absolute;
-    top: -20px;
-    right: 30px;
-    font-family: 'Amiri', serif;
-    font-size: 180px;
-    color: var(--accent);
-    opacity: 0.06;
-    line-height: 1;
+  @media (max-width: 480px) {
+    .nav__brand .word { font-size: 18px; }
+    .nav__brand .word-ar { font-size: 18px; }
+    .nav__links { gap: 16px; }
+    .nav__link .en { font-size: 12px; }
+    .nav__link .ar { font-size: 10px; }
+    .hero__verse { font-size: 32px; }
+    .hero__gloss { font-size: 20px; }
+    .verse-frame__verse { font-size: 26px; }
+    .verse-frame__translation { font-size: 16px; }
+    .how__title, .features__title, .privacy__title, .app__intro h2 { font-size: 28px; }
+    .features__heading { font-size: 20px; }
+    .colophon__title { font-size: 34px; }
+    .colophon__tag { font-size: 18px; }
+    .hero__phone-wrap .phone { transform: scale(0.62); }
+    .hero__phone-wrap { height: 480px; }
+    .app__gallery-item .phone { transform: scale(0.52); margin-bottom: -370px; }
   }
-
-  .verse-arabic {
-    font-family: 'Amiri', serif;
-    font-size: clamp(22px, 4vw, 32px);
-    line-height: 2;
-    color: #F0F4F8;
-    direction: rtl;
-    margin-bottom: 24px;
-  }
-
-  .verse-translation {
-    font-size: 16px;
-    color: var(--text-muted);
-    line-height: 1.8;
-    font-style: italic;
-    max-width: 600px;
-    margin: 0 auto 16px;
-  }
-
-  .verse-ref {
-    font-size: 13px;
-    color: var(--accent);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-
-  /* --- FEATURES --- */
-  .features-section {
-    padding: 80px 24px;
-  }
-
-  .section-title {
-    text-align: center;
-    font-size: 32px;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-
-  .section-sub {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 16px;
-    margin-bottom: 56px;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    max-width: 960px;
-    margin: 0 auto;
-  }
-
-  .feature-card {
-    background: var(--dark2);
-    border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 16px;
-    padding: 32px 28px;
-    transition: all 0.3s ease;
-  }
-
-  .feature-card:hover {
-    border-color: rgba(0, 208, 156, 0.2);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-  }
-
-  .feature-icon {
-    font-size: 28px;
-    margin-bottom: 16px;
-    display: block;
-  }
-
-  .feature-title {
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .feature-desc {
-    font-size: 14px;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-
-  /* --- PRIVACY --- */
-  .privacy-section {
-    padding: 80px 24px;
-    max-width: 760px;
-    margin: 0 auto;
-  }
-
-  .privacy-section h2 {
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 32px;
-    text-align: center;
-  }
-
-  .privacy-section h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--accent);
-    margin: 28px 0 12px;
-  }
-
-  .privacy-section p {
-    font-size: 15px;
-    color: var(--text-muted);
-    line-height: 1.8;
-    margin-bottom: 12px;
-  }
-
-  .privacy-section ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  .privacy-section li {
-    font-size: 15px;
-    color: var(--text-muted);
-    line-height: 1.8;
-    padding-left: 20px;
-    position: relative;
-  }
-
-  .privacy-section li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-  }
-
-  /* --- FOOTER --- */
-  .footer {
-    padding: 40px 24px;
-    text-align: center;
-    border-top: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .footer-logo {
-    height: 40px;
-    margin-bottom: 12px;
-  }
-
-  .footer p {
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  .footer a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .footer a:hover { text-decoration: underline; }
-
-  .footer-links {
-    margin-top: 12px;
-    display: flex;
-    gap: 24px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  /* --- LANGUAGE TOGGLE --- */
-  .lang-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 100;
-    background: var(--dark2);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px;
-    padding: 8px 16px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 13px;
-    color: var(--accent);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .lang-toggle:hover {
-    border-color: var(--accent);
-    background: var(--glow);
-  }
-
-  /* --- ANIMATIONS --- */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* --- RESPONSIVE --- */
-  @media (max-width: 600px) {
-    .hero { padding: 40px 20px; }
-    .verse-container { padding: 32px 24px; }
-    .features-grid { grid-template-columns: 1fr; }
-    .cta-row { flex-direction: column; align-items: center; }
-    .btn { width: 100%; justify-content: center; max-width: 300px; }
-  }
-
-  /* --- ARABIC MODE --- */
-  [dir="rtl"] body { font-family: 'Amiri', 'Outfit', sans-serif; }
-  [dir="rtl"] .tagline-en { letter-spacing: 1px; }
-  [dir="rtl"] .feature-card { text-align: right; }
-  [dir="rtl"] .privacy-section li { padding-left: 0; padding-right: 20px; }
-  [dir="rtl"] .privacy-section li::before { left: auto; right: 0; content: '←'; }
 </style>
 </head>
 <body>
 
-<button class="lang-toggle" onclick="toggleLang()">العربية</button>
+<!-- =========================================================
+     NAV
+     ========================================================= -->
+<nav class="nav">
+  <a href="#" class="nav__brand">
+    <svg class="mark" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+      <path fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="miter"
+        d="M11 0 L12.94 6.39 L18.94 3.22 L15.76 9.21 L22 11 L15.76 12.79 L18.94 18.78 L12.94 15.61 L11 22 L9.06 15.61 L3.06 18.78 L6.24 12.79 L0 11 L6.24 9.21 L3.06 3.22 L9.06 6.39 Z"/>
+    </svg>
+    <span class="word">Qawama</span>
+    <span class="word-ar">قواما</span>
+  </a>
+  <div class="nav__links">
+    <a class="nav__link" href="#verse"><span class="en">The verse</span><span class="ar">الآية</span></a>
+    <a class="nav__link" href="#how"><span class="en">How it reads</span><span class="ar">كيف</span></a>
+    <a class="nav__link" href="#app"><span class="en">The app</span><span class="ar">التطبيق</span></a>
+    <a class="nav__link" href="#privacy"><span class="en">Privacy</span><span class="ar">الخصوصية</span></a>
+    <button class="lang-toggle" onclick="toggleScript()" aria-label="Toggle primary script">EN · ع</button>
+    <a class="btn btn--sm" href="#cta">Get the app</a>
+  </div>
+</nav>
 
-<!-- HERO -->
-<section class="hero">
-  <img src="data:image/png;base64,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" alt="Qawama قواما" class="logo-img">
-  <h2 style="font-size: clamp(32px, 6vw, 52px); font-weight: 700; margin-bottom: 12px; animation: fadeUp 1s ease 0.15s both;">Qawama <span style="font-family: 'Amiri', serif; color: var(--accent);">قواما</span></h2>
-  <div class="tagline-en">Balanced spending, blessed living</div>
-  <div class="tagline-ar">إنفاق متوازن، حياة مباركة</div>
+<!-- =========================================================
+     HERO — folio i
+     ========================================================= -->
+<section class="hero" id="hero">
+  <!-- Hero deco octagram in margin -->
+  <svg class="hero__deco" width="520" height="520" viewBox="0 0 520 520" aria-hidden="true">
+    <path fill="none" stroke="currentColor" stroke-width="0.8" stroke-linejoin="miter"
+      d="M260 0 L305.7 151 L447.6 76.1 L372.7 218 L520 260 L372.7 302 L447.6 443.9 L305.7 369 L260 520 L214.3 369 L72.4 443.9 L147.3 302 L0 260 L147.3 218 L72.4 76.1 L214.3 151 Z"/>
+  </svg>
 
-  <h1 class="hero-headline" data-en='Smart budgeting that <span class="accent">understands</span> your spending' data-ar='ميزانية ذكية <span class="accent">تفهم</span> إنفاقك'>Smart budgeting that <span class="accent">understands</span> your spending</h1>
-
-  <p class="hero-sub" data-en="Qawama automatically reads your bank SMS, categorizes your transactions, and gives you insights — all while keeping your data private and on your device." data-ar="قواما تقرأ رسائل البنك تلقائياً، تصنف معاملاتك، وتعطيك تحليلات مالية — مع الحفاظ على خصوصية بياناتك على جهازك.">Qawama automatically reads your bank SMS, categorizes your transactions, and gives you insights — all while keeping your data private and on your device.</p>
-
-  <div class="cta-row">
-    <a href="#" class="btn btn-primary">
-      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.176 1.322a.75.75 0 0 0-1.176.618v20.12a.75.75 0 0 0 1.176.618l15.59-10.06a.75.75 0 0 0 0-1.236L3.176 1.322z"/></svg>
-      <span data-en="Get it on Google Play" data-ar="حمّل من جوجل بلاي">Get it on Google Play</span>
-    </a>
-    <a href="#privacy" class="btn btn-outline" data-en="Privacy Policy" data-ar="سياسة الخصوصية">Privacy Policy</a>
+  <div class="hero__folio qw-page-header">
+    <span>Qawama · قواما · folio i</span>
+    <span class="ar">إنفاق متوازن، حياة مباركة</span>
+    <span>established 2026 · Muscat</span>
   </div>
 
-  <!-- Phone Mockups -->
-  <div class="phones-showcase">
-    <div class="phone-frame left">
-      <img id="phone-screen1" src="screen1.jpeg" alt="Qawama Dashboard — Budget overview, accounts, and daily spending">
+  <div class="hero__grid">
+    <div>
+      <div class="qw-eyebrow hero__eyebrow">For Muslims of the GCC · لِلمسلمين في الخليج</div>
+
+      <p class="hero__verse">بَيْنَ ذَٰلِكَ <span class="accent">قَوَامًا</span></p>
+      <p class="hero__gloss">held in balance — neither extravagance, nor restraint.</p>
+
+      <p class="hero__body"
+         data-en="Qawama is a budgeting companion built around a single Quranic principle: <em>spending that sits between excess and stinting</em>. It reads your bank messages on-device, classifies every transaction, and shows you which side of the line you stand on."
+         data-ar="قواما رفيق ميزانية مبني على مبدأ قرآني واحد: <em>إنفاق بين الإسراف والإقتار</em>. يقرأ رسائل بنكك على جهازك، يصنّف كل معاملة، ويُظهر لك على أيّ جانب من الخط تقف.">
+        Qawama is a budgeting companion built around a single Quranic principle:
+        <em>spending that sits between excess and stinting</em>. It reads your bank
+        messages on-device, classifies every transaction, and shows you which side
+        of the line you stand on.
+      </p>
+
+      <div class="hero__ctas">
+        <a class="btn btn--lg" href="#cta">Get on Google Play</a>
+        <a class="btn btn--outline btn--lg" href="#verse">Read the verse →</a>
+      </div>
+
+      <div class="hero__spec">
+        <div><div class="k">Made for</div><div class="v">Oman · GCC</div><div class="ar">خليج</div></div>
+        <div><div class="k">Currency</div><div class="v">OMR · 3 decimals</div><div class="ar">ر.ع.</div></div>
+        <div><div class="k">Privacy</div><div class="v">On-device only</div><div class="ar">محلي</div></div>
+        <div><div class="k">Languages</div><div class="v">العربية · English</div><div class="ar">ثنائي</div></div>
+      </div>
     </div>
-    <div class="phone-frame right">
-      <img id="phone-screen2" src="screen2.jpeg" alt="Qawama Dashboard — Categories, upcoming payments, and recent transactions">
+
+    <div class="hero__phone-wrap">
+      <div class="margin-note qw-margin">specimen · the dashboard</div>
+      <!-- DASHBOARD PHONE MOCK -->
+      <div class="phone" aria-hidden="true">
+        <div class="phone__screen">
+          <div class="phone__status"><span>9:41</span><span></span></div>
+          <div class="phone__notch"></div>
+          <div class="phone__folio"><span>FOLIO · 14 · DAILY</span><span class="ar">رمضان ١٤٤٧</span></div>
+          <div class="phone__content">
+            <div class="ph-head">
+              <div>
+                <div class="qw-eyebrow">Day 14 · Ramadan 1447</div>
+                <div class="ph-head__title">
+                  <span class="en">Salām, Sara</span>
+                  <span class="ar">سارة</span>
+                </div>
+              </div>
+              <div class="ph-head__badge">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                  <path fill="none" stroke="#B8552E" stroke-width="1.2" stroke-linejoin="miter"
+                    d="M8 0 L9.4 4.65 L13.78 2.34 L11.47 6.72 L16 8 L11.47 9.28 L13.78 13.66 L9.4 11.35 L8 16 L6.6 11.35 L2.22 13.66 L4.53 9.28 L0 8 L4.53 6.72 L2.22 2.34 L6.6 4.65 Z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="ph-body">
+              <div class="ph-hero">
+                <div class="ph-hero__top">
+                  <div>
+                    <div class="qw-eyebrow">This month · spending</div>
+                    <div class="ph-hero__amt">
+                      <span class="big">490</span><span class="small">.700</span><span class="cur">OMR</span>
+                    </div>
+                  </div>
+                  <div class="ph-hero__right">
+                    <div class="of">of limit</div>
+                    <div class="lim">1,200.000</div>
+                    <div class="rem">14 days remain</div>
+                  </div>
+                </div>
+                <div class="ph-hero__rule"></div>
+
+                <div class="meter">
+                  <div class="meter__top">
+                    <div class="qw-eyebrow">The Qawām scale</div>
+                    <span class="ar">بَيْنَ ذَٰلِكَ قَوَامًا</span>
+                  </div>
+                  <div class="meter__labels">
+                    <span class="ar is-l">إسراف</span>
+                    <span class="ar is-c">قَوَام</span>
+                    <span class="ar is-r">إقتار</span>
+                  </div>
+                  <div class="meter__ticks">
+                    <span style="left:0%;height:8px"></span><span style="left:10%;height:4px"></span><span style="left:20%;height:4px"></span><span style="left:30%;height:4px"></span><span style="left:40%;height:4px"></span><span style="left:50%;height:6px"></span><span style="left:60%;height:4px"></span><span style="left:70%;height:4px"></span><span style="left:80%;height:4px"></span><span style="left:90%;height:4px"></span><span style="left:100%;height:8px"></span>
+                  </div>
+                  <div class="meter__track">
+                    <div class="meter__zone"></div>
+                    <div class="meter__bound l"></div>
+                    <div class="meter__bound r"></div>
+                    <div class="meter__pin"></div>
+                  </div>
+                  <div class="meter__nums">
+                    <span class="a">0</span><span class="b">33</span><span class="c">67</span><span class="d">100</span>
+                  </div>
+                  <div class="meter__lat">
+                    <span>Isrāf · excess</span>
+                    <span class="is-c">Qawām · balance</span>
+                    <span class="is-r">Iqtīr · stinting</span>
+                  </div>
+                </div>
+
+                <div class="ph-verdict">
+                  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                    <path fill="none" stroke="#B8552E" stroke-width="1.5" stroke-linejoin="miter"
+                      d="M7 0 L8.225 4.07 L12.06 2.05 L10.04 5.88 L14 7 L10.04 8.12 L12.06 11.95 L8.225 9.93 L7 14 L5.775 9.93 L1.94 11.95 L3.96 8.12 L0 7 L3.96 5.88 L1.94 2.05 L5.775 4.07 Z"/>
+                  </svg>
+                  <div class="txt">Holding within qawām · pace 4% slower than 30-day mean.</div>
+                </div>
+              </div>
+
+              <div class="ph-section-head"><span class="en">Categories</span><span class="ar">الفئات</span></div>
+              <div class="ph-cat-list">
+                <div class="ph-cat">
+                  <div class="ph-cat__top">
+                    <div class="ph-cat__name"><span class="en">Groceries</span><span class="ar">بقالة</span></div>
+                    <div class="ph-cat__amt">142.500<span class="lim">/ 250.000</span></div>
+                  </div>
+                  <div class="ph-cat__bar"><i style="width:57%"></i></div>
+                </div>
+                <div class="ph-cat">
+                  <div class="ph-cat__top">
+                    <div class="ph-cat__name"><span class="en">Transport</span><span class="ar">مواصلات</span></div>
+                    <div class="ph-cat__amt">68.200<span class="lim">/ 90.000</span></div>
+                  </div>
+                  <div class="ph-cat__bar"><i style="width:76%"></i></div>
+                </div>
+                <div class="ph-cat">
+                  <div class="ph-cat__top">
+                    <div class="ph-cat__name"><span class="en">Dining</span><span class="ar">مطاعم</span><span class="ph-badge">over</span></div>
+                    <div class="ph-cat__amt over">196.000<span class="lim">/ 180.000</span></div>
+                  </div>
+                  <div class="ph-cat__bar"><i class="over" style="width:100%"></i></div>
+                </div>
+                <div class="ph-cat">
+                  <div class="ph-cat__top">
+                    <div class="ph-cat__name"><span class="en">Bills</span><span class="ar">فواتير</span></div>
+                    <div class="ph-cat__amt">84.000<span class="lim">/ 120.000</span></div>
+                  </div>
+                  <div class="ph-cat__bar"><i style="width:70%"></i></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ph-nav">
+              <div class="ph-nav__item on"><span class="dot"></span><span class="lab">Today</span></div>
+              <div class="ph-nav__item"><span class="dot"></span><span class="lab">Ledger</span></div>
+              <div class="ph-nav__item"><span class="dot"></span><span class="lab">Budgets</span></div>
+              <div class="ph-nav__item"><span class="dot"></span><span class="lab">Insights</span></div>
+              <div class="ph-nav__item"><span class="dot"></span><span class="lab">More</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- VERSE -->
-<section class="verse-section">
-  <div class="verse-container">
-    <div class="verse-arabic">وَالَّذِينَ إِذَا أَنفَقُوا لَمْ يُسْرِفُوا وَلَمْ يَقْتُرُوا وَكَانَ بَيْنَ ذَٰلِكَ قَوَامًا</div>
-    <p class="verse-translation" data-en="And those who, when they spend, are neither extravagant nor stingy, but hold a just balance between those extremes." data-ar="">And those who, when they spend, are neither extravagant nor stingy, but hold a just balance between those extremes.</p>
-    <div class="verse-ref">Surah Al-Furqan · 25:67</div>
+<!-- =========================================================
+     VERSE FOLIO — folio ii
+     ========================================================= -->
+<section class="verse-folio" id="verse">
+  <!-- Tessellation watermark -->
+  <svg class="verse-folio__deco" viewBox="0 0 1280 1100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <pattern id="tess" x="0" y="0" width="56" height="56" patternUnits="userSpaceOnUse">
+        <g transform="translate(28,28)">
+          <rect x="-16.8" y="-16.8" width="33.6" height="33.6" fill="none" stroke="currentColor" stroke-width="0.7"/>
+          <rect x="-16.8" y="-16.8" width="33.6" height="33.6" fill="none" stroke="currentColor" stroke-width="0.7" transform="rotate(45)"/>
+        </g>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#tess)"/>
+  </svg>
+
+  <div class="qw-page-header verse-folio__page-header">
+    <span>The verse · الآية</span>
+    <span style="color: var(--accent)">folio ii</span>
+    <span>Al-Furqān 25:67</span>
+  </div>
+
+  <div class="verse-frame">
+    <!-- Corner ornaments -->
+    <svg class="verse-frame__corner tl" width="64" height="64" viewBox="0 0 56 56" aria-hidden="true">
+      <g fill="none" stroke="#B8552E" stroke-width="0.7">
+        <path d="M 0 0 L 56 0 L 56 6 L 6 6 L 6 56 L 0 56 Z" fill="#B8552E" fill-opacity="0.05" stroke="none"/>
+        <line x1="0" y1="0" x2="56" y2="0"/><line x1="0" y1="0" x2="0" y2="56"/>
+        <line x1="0" y1="14" x2="14" y2="14"/><line x1="14" y1="0" x2="14" y2="14"/>
+        <rect x="14" y="14" width="14" height="14"/>
+        <rect x="14" y="14" width="10" height="10" transform="rotate(45 19 19)"/>
+        <circle cx="3" cy="3" r="1" fill="#B8552E"/>
+        <circle cx="11" cy="3" r="0.8" fill="#B8552E"/>
+        <circle cx="3" cy="11" r="0.8" fill="#B8552E"/>
+      </g>
+    </svg>
+    <svg class="verse-frame__corner tr" width="64" height="64" viewBox="0 0 56 56" aria-hidden="true">
+      <g fill="none" stroke="#B8552E" stroke-width="0.7">
+        <path d="M 0 0 L 56 0 L 56 6 L 6 6 L 6 56 L 0 56 Z" fill="#B8552E" fill-opacity="0.05" stroke="none"/>
+        <line x1="0" y1="0" x2="56" y2="0"/><line x1="0" y1="0" x2="0" y2="56"/>
+        <line x1="0" y1="14" x2="14" y2="14"/><line x1="14" y1="0" x2="14" y2="14"/>
+        <rect x="14" y="14" width="14" height="14"/>
+        <rect x="14" y="14" width="10" height="10" transform="rotate(45 19 19)"/>
+        <circle cx="3" cy="3" r="1" fill="#B8552E"/>
+        <circle cx="11" cy="3" r="0.8" fill="#B8552E"/>
+        <circle cx="3" cy="11" r="0.8" fill="#B8552E"/>
+      </g>
+    </svg>
+    <svg class="verse-frame__corner bl" width="64" height="64" viewBox="0 0 56 56" aria-hidden="true">
+      <g fill="none" stroke="#B8552E" stroke-width="0.7">
+        <path d="M 0 0 L 56 0 L 56 6 L 6 6 L 6 56 L 0 56 Z" fill="#B8552E" fill-opacity="0.05" stroke="none"/>
+        <line x1="0" y1="0" x2="56" y2="0"/><line x1="0" y1="0" x2="0" y2="56"/>
+        <line x1="0" y1="14" x2="14" y2="14"/><line x1="14" y1="0" x2="14" y2="14"/>
+        <rect x="14" y="14" width="14" height="14"/>
+        <rect x="14" y="14" width="10" height="10" transform="rotate(45 19 19)"/>
+        <circle cx="3" cy="3" r="1" fill="#B8552E"/>
+        <circle cx="11" cy="3" r="0.8" fill="#B8552E"/>
+        <circle cx="3" cy="11" r="0.8" fill="#B8552E"/>
+      </g>
+    </svg>
+    <svg class="verse-frame__corner br" width="64" height="64" viewBox="0 0 56 56" aria-hidden="true">
+      <g fill="none" stroke="#B8552E" stroke-width="0.7">
+        <path d="M 0 0 L 56 0 L 56 6 L 6 6 L 6 56 L 0 56 Z" fill="#B8552E" fill-opacity="0.05" stroke="none"/>
+        <line x1="0" y1="0" x2="56" y2="0"/><line x1="0" y1="0" x2="0" y2="56"/>
+        <line x1="0" y1="14" x2="14" y2="14"/><line x1="14" y1="0" x2="14" y2="14"/>
+        <rect x="14" y="14" width="14" height="14"/>
+        <rect x="14" y="14" width="10" height="10" transform="rotate(45 19 19)"/>
+        <circle cx="3" cy="3" r="1" fill="#B8552E"/>
+        <circle cx="11" cy="3" r="0.8" fill="#B8552E"/>
+        <circle cx="3" cy="11" r="0.8" fill="#B8552E"/>
+      </g>
+    </svg>
+
+    <div class="verse-frame__head">
+      <!-- Surah mark -->
+      <svg width="42" height="42" viewBox="0 0 32 32" aria-hidden="true">
+        <g fill="none" stroke="#B8552E" stroke-width="0.8">
+          <circle cx="16" cy="16" r="9"/>
+          <circle cx="16" cy="16" r="13"/>
+          <circle cx="27" cy="16" r="1.6" fill="#B8552E"/>
+          <circle cx="23.78" cy="23.78" r="1.6" fill="#B8552E"/>
+          <circle cx="16" cy="27" r="1.6" fill="#B8552E"/>
+          <circle cx="8.22" cy="23.78" r="1.6" fill="#B8552E"/>
+          <circle cx="5" cy="16" r="1.6" fill="#B8552E"/>
+          <circle cx="8.22" cy="8.22" r="1.6" fill="#B8552E"/>
+          <circle cx="16" cy="5" r="1.6" fill="#B8552E"/>
+          <circle cx="23.78" cy="8.22" r="1.6" fill="#B8552E"/>
+          <circle cx="16" cy="16" r="2" fill="#B8552E"/>
+        </g>
+      </svg>
+      <div class="label">Sūrah Al-Furqān · The Criterion · 25 : 67</div>
+      <div class="ar">سورة الفرقان · مكية</div>
+    </div>
+
+    <p class="verse-frame__verse">
+      وَالَّذِينَ إِذَا أَنفَقُوا<br/>
+      لَمْ يُسْرِفُوا وَلَمْ يَقْتُرُوا<br/>
+      وَكَانَ بَيْنَ ذَٰلِكَ <span class="accent">قَوَامًا</span>
+    </p>
+
+    <div class="verse-frame__divider">
+      <!-- Diamond divider -->
+      <svg width="200" height="7" viewBox="0 0 200 7" aria-hidden="true">
+        <line x1="0" y1="3.5" x2="78" y2="3.5" stroke="#A07C3E" stroke-width="0.6" opacity="0.55"/>
+        <line x1="122" y1="3.5" x2="200" y2="3.5" stroke="#A07C3E" stroke-width="0.6" opacity="0.55"/>
+        <rect x="83.5" y="1" width="5" height="5" fill="none" stroke="#A07C3E" stroke-width="0.8" transform="rotate(45 86 3.5)"/>
+        <rect x="97.5" y="1" width="5" height="5" fill="none" stroke="#A07C3E" stroke-width="0.8" transform="rotate(45 100 3.5)"/>
+        <rect x="111.5" y="1" width="5" height="5" fill="none" stroke="#A07C3E" stroke-width="0.8" transform="rotate(45 114 3.5)"/>
+      </svg>
+    </div>
+
+    <p class="verse-frame__translation">
+      &ldquo;And those who, when they spend, are neither extravagant nor stingy,
+      but maintain a just balance between those extremes.&rdquo;
+    </p>
+
+    <div class="verse-gloss">
+      <div class="verse-gloss__col">
+        <div class="ar">إسراف</div>
+        <div class="lat">Isrāf</div>
+        <p>extravagance — spending past need; the wasted hand.</p>
+      </div>
+      <div class="verse-gloss__sep"></div>
+      <div class="verse-gloss__col">
+        <div class="ar is-center">قَوَام</div>
+        <div class="lat is-center">Qawām</div>
+        <p>balance — neither too much, nor too little; the way of the believer.</p>
+      </div>
+      <div class="verse-gloss__sep"></div>
+      <div class="verse-gloss__col">
+        <div class="ar">إقتار</div>
+        <div class="lat">Iqtīr</div>
+        <p>stinting — withholding from rightful expense; restraint that pinches.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="features-section">
-  <h2 class="section-title" data-en="What Qawama Does" data-ar="ماذا تقدم قواما">What Qawama Does</h2>
-  <p class="section-sub" data-en="Everything you need to understand your spending — automatically." data-ar="كل ما تحتاجه لفهم إنفاقك — تلقائياً.">Everything you need to understand your spending — automatically.</p>
+<!-- =========================================================
+     HOW IT READS — folio iii
+     ========================================================= -->
+<section class="how" id="how">
+  <!-- Rub el Hizb deco -->
+  <svg class="how__deco" width="420" height="420" viewBox="0 0 420 420" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="0.8">
+      <rect x="84" y="84" width="252" height="252"/>
+      <rect x="84" y="84" width="252" height="252" transform="rotate(45 210 210)"/>
+    </g>
+  </svg>
 
-  <div class="features-grid">
-    <div class="feature-card">
-      <span class="feature-icon">📱</span>
-      <div class="feature-title" data-en="Auto SMS Reading" data-ar="قراءة الرسائل تلقائياً">Auto SMS Reading</div>
-      <div class="feature-desc" data-en="Automatically reads bank SMS from any Omani bank and imports transactions instantly. No manual entry needed." data-ar="تقرأ رسائل البنك تلقائياً من أي بنك عماني وتستورد المعاملات فوراً. بدون إدخال يدوي.">Automatically reads bank SMS from any Omani bank and imports transactions instantly. No manual entry needed.</div>
+  <div class="qw-page-header" style="margin-bottom: 56px;">
+    <span>How it reads · كيف يقرأ</span>
+    <span style="color: var(--accent)">folio iii</span>
+    <span>three movements</span>
+  </div>
+
+  <div class="how__title-row">
+    <div class="qw-eyebrow">A reading</div>
+    <h2 class="how__title">Three movements between<br/>your bank and your conscience.</h2>
+  </div>
+
+  <div class="how__steps">
+    <div class="how__step">
+      <div class="how__step-num-row"><span class="how__step-num">i.</span></div>
+      <h3>It reads the message.</h3>
+      <span class="ar">يقرأ الرسالة</span>
+      <p class="qw-dropcap">When your bank sends an SMS, Qawama parses it on your phone. Bank Muscat, NBO, Bank Dhofar, Sohar, Bank Nizwa, Alizz — all supported. Nothing leaves the device.</p>
     </div>
-
-    <div class="feature-card">
-      <span class="feature-icon">🏷️</span>
-      <div class="feature-title" data-en="Smart Categorization" data-ar="تصنيف ذكي">Smart Categorization</div>
-      <div class="feature-desc" data-en="Automatically categorizes your transactions. Learns from your corrections and gets smarter over time." data-ar="تصنف معاملاتك تلقائياً. تتعلم من تصحيحاتك وتصبح أذكى مع الوقت.">Automatically categorizes your transactions. Learns from your corrections and gets smarter over time.</div>
+    <div class="how__step">
+      <div class="how__step-num-row">
+        <span class="how__step-num">ii.</span>
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill="none" stroke="#B8552E" stroke-width="1.4" stroke-linejoin="miter"
+            d="M10 0 L11.75 5.81 L17.13 2.93 L14.25 8.31 L20 10 L14.25 11.69 L17.13 17.07 L11.75 14.19 L10 20 L8.25 14.19 L2.87 17.07 L5.75 11.69 L0 10 L5.75 8.31 L2.87 2.93 L8.25 5.81 Z"/>
+        </svg>
+      </div>
+      <h3>It places the merchant.</h3>
+      <span class="ar">يحدد التاجر</span>
+      <p class="qw-dropcap">A built-in dictionary of GCC merchants assigns the right category. Lulu, Carrefour, Talabat, Petrol stations, ATMs — recognized at the moment the message lands.</p>
     </div>
-
-    <div class="feature-card">
-      <span class="feature-icon">📊</span>
-      <div class="feature-title" data-en="Financial Insights" data-ar="تحليلات مالية">Financial Insights</div>
-      <div class="feature-desc" data-en="See where your money goes with charts, trends, and month-over-month comparisons. Know if you're on budget." data-ar="شاهد أين تذهب أموالك مع رسوم بيانية واتجاهات ومقارنات شهرية. اعرف إذا كنت ضمن ميزانيتك.">See where your money goes with charts, trends, and month-over-month comparisons. Know if you're on budget.</div>
-    </div>
-
-    <div class="feature-card">
-      <span class="feature-icon">🔒</span>
-      <div class="feature-title" data-en="Privacy First" data-ar="الخصوصية أولاً">Privacy First</div>
-      <div class="feature-desc" data-en="All your data stays on your device. Optional encrypted cloud backup that even we can't read." data-ar="جميع بياناتك تبقى على جهازك. نسخ احتياطي سحابي مشفر اختياري لا يمكن حتى لنا قراءته.">All your data stays on your device. Optional encrypted cloud backup that even we can't read.</div>
-    </div>
-
-    <div class="feature-card">
-      <span class="feature-icon">🌙</span>
-      <div class="feature-title" data-en="Arabic & RTL" data-ar="عربي بالكامل">Arabic & RTL</div>
-      <div class="feature-desc" data-en="Full Arabic language support with right-to-left layout. Built for the Omani and GCC market." data-ar="دعم كامل للغة العربية مع تخطيط من اليمين لليسار. مصمم للسوق العماني والخليجي.">Full Arabic language support with right-to-left layout. Built for the Omani and GCC market.</div>
-    </div>
-
-    <div class="feature-card">
-      <span class="feature-icon">💰</span>
-      <div class="feature-title" data-en="Budget Tracking" data-ar="متابعة الميزانية">Budget Tracking</div>
-      <div class="feature-desc" data-en="Set monthly budgets per category, get alerts when approaching limits, and track savings goals." data-ar="حدد ميزانية شهرية لكل فئة، واحصل على تنبيهات عند الاقتراب من الحد، وتتبع أهداف الادخار.">Set monthly budgets per category, get alerts when approaching limits, and track savings goals.</div>
+    <div class="how__step">
+      <div class="how__step-num-row"><span class="how__step-num">iii.</span></div>
+      <h3>It marks the line.</h3>
+      <span class="ar">يُعلِّم القَوَام</span>
+      <p class="qw-dropcap">Every spend is plotted on the qawām scale. You see — at a glance, in a single horizontal — whether you stand within balance, or have drifted toward excess or restraint.</p>
     </div>
   </div>
 </section>
 
-<!-- PRIVACY POLICY -->
-<section class="privacy-section" id="privacy">
-  <h2 data-en="Privacy Policy" data-ar="سياسة الخصوصية">Privacy Policy</h2>
+<!-- =========================================================
+     THE APP — folio iv
+     ========================================================= -->
+<section class="app" id="app">
+  <div class="app__inner">
+    <div class="qw-page-header" style="margin-bottom: 56px;">
+      <span>The app · التطبيق</span>
+      <span style="color: var(--accent)">folio iv</span>
+      <span>specimen pages</span>
+    </div>
 
-  <p data-en="Last updated: March 2026" data-ar="آخر تحديث: مارس 2026"><em>Last updated: March 2026</em></p>
+    <div class="app__intro">
+      <h2>A budgeting almanac<br/>for the household of moderation.</h2>
+      <p>Five core screens, none of them busy. Today, ledger, budgets, reflections, colophon. Each laid out like a page from a manuscript: ruled columns, marginal notes, one figure per spread.</p>
+    </div>
 
-  <h3 data-en="Your Data Stays Yours" data-ar="بياناتك ملكك">Your Data Stays Yours</h3>
-  <p data-en="Qawama stores all your financial data locally on your device. We do not have servers that store your transactions, budgets, or any personal financial information." data-ar="قواما تخزن جميع بياناتك المالية محلياً على جهازك. ليس لدينا خوادم تخزن معاملاتك أو ميزانياتك أو أي معلومات مالية شخصية.">Qawama stores all your financial data locally on your device. We do not have servers that store your transactions, budgets, or any personal financial information.</p>
+    <div class="app__gallery">
+      <!-- Dashboard (compact) -->
+      <div class="app__gallery-item">
+        <div class="phone" aria-hidden="true">
+          <div class="phone__screen">
+            <div class="phone__status"><span>9:41</span><span></span></div>
+            <div class="phone__notch"></div>
+            <div class="phone__folio"><span>FOLIO · 14 · DAILY</span><span class="ar">رمضان ١٤٤٧</span></div>
+            <div class="phone__content">
+              <div class="ph-head">
+                <div>
+                  <div class="qw-eyebrow">Day 14 · Ramadan 1447</div>
+                  <div class="ph-head__title"><span class="en">Salām, Sara</span><span class="ar">سارة</span></div>
+                </div>
+                <div class="ph-head__badge">
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                    <path fill="none" stroke="#B8552E" stroke-width="1.2" stroke-linejoin="miter"
+                      d="M8 0 L9.4 4.65 L13.78 2.34 L11.47 6.72 L16 8 L11.47 9.28 L13.78 13.66 L9.4 11.35 L8 16 L6.6 11.35 L2.22 13.66 L4.53 9.28 L0 8 L4.53 6.72 L2.22 2.34 L6.6 4.65 Z"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="ph-body">
+                <div class="ph-hero">
+                  <div class="ph-hero__top">
+                    <div>
+                      <div class="qw-eyebrow">This month · spending</div>
+                      <div class="ph-hero__amt"><span class="big">490</span><span class="small">.700</span><span class="cur">OMR</span></div>
+                    </div>
+                    <div class="ph-hero__right">
+                      <div class="of">of limit</div>
+                      <div class="lim">1,200.000</div>
+                      <div class="rem">14 days remain</div>
+                    </div>
+                  </div>
+                  <div class="ph-hero__rule"></div>
+                  <div class="meter">
+                    <div class="meter__top"><div class="qw-eyebrow">The Qawām scale</div><span class="ar">بَيْنَ ذَٰلِكَ قَوَامًا</span></div>
+                    <div class="meter__labels"><span class="ar is-l">إسراف</span><span class="ar is-c">قَوَام</span><span class="ar is-r">إقتار</span></div>
+                    <div class="meter__ticks">
+                      <span style="left:0%;height:8px"></span><span style="left:10%;height:4px"></span><span style="left:20%;height:4px"></span><span style="left:30%;height:4px"></span><span style="left:40%;height:4px"></span><span style="left:50%;height:6px"></span><span style="left:60%;height:4px"></span><span style="left:70%;height:4px"></span><span style="left:80%;height:4px"></span><span style="left:90%;height:4px"></span><span style="left:100%;height:8px"></span>
+                    </div>
+                    <div class="meter__track"><div class="meter__zone"></div><div class="meter__bound l"></div><div class="meter__bound r"></div><div class="meter__pin"></div></div>
+                    <div class="meter__nums"><span class="a">0</span><span class="b">33</span><span class="c">67</span><span class="d">100</span></div>
+                    <div class="meter__lat"><span>Isrāf · excess</span><span class="is-c">Qawām · balance</span><span class="is-r">Iqtīr · stinting</span></div>
+                  </div>
+                </div>
+                <div class="ph-section-head"><span class="en">Categories</span><span class="ar">الفئات</span></div>
+                <div class="ph-cat-list">
+                  <div class="ph-cat"><div class="ph-cat__top"><div class="ph-cat__name"><span class="en">Groceries</span><span class="ar">بقالة</span></div><div class="ph-cat__amt">142.500<span class="lim">/ 250.000</span></div></div><div class="ph-cat__bar"><i style="width:57%"></i></div></div>
+                  <div class="ph-cat"><div class="ph-cat__top"><div class="ph-cat__name"><span class="en">Dining</span><span class="ar">مطاعم</span></div><div class="ph-cat__amt over">196.000<span class="lim">/ 180.000</span></div></div><div class="ph-cat__bar"><i class="over" style="width:100%"></i></div></div>
+                </div>
+              </div>
+              <div class="ph-nav">
+                <div class="ph-nav__item on"><span class="dot"></span><span class="lab">Today</span></div>
+                <div class="ph-nav__item"><span class="dot"></span><span class="lab">Ledger</span></div>
+                <div class="ph-nav__item"><span class="dot"></span><span class="lab">Budgets</span></div>
+                <div class="ph-nav__item"><span class="dot"></span><span class="lab">Insights</span></div>
+                <div class="ph-nav__item"><span class="dot"></span><span class="lab">More</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">i · Today<span class="ar">اليوم</span></div>
+      </div>
 
-  <h3 data-en="What We Access" data-ar="ما نصل إليه">What We Access</h3>
-  <ul>
-    <li data-en="SMS messages — only bank transaction SMS, read on-device, never sent anywhere" data-ar="الرسائل النصية — رسائل البنك فقط، تُقرأ على الجهاز، ولا تُرسل إلى أي مكان">SMS messages — only bank transaction SMS, read on-device, never sent anywhere</li>
-    <li data-en="Internet — only for exchange rates (ExchangeRate-API), Firebase authentication, and optional encrypted backup" data-ar="الإنترنت — فقط لأسعار الصرف وتسجيل الدخول بـ Firebase والنسخ الاحتياطي المشفر الاختياري">Internet — only for exchange rates (ExchangeRate-API), Firebase authentication, and optional encrypted backup</li>
-    <li data-en="Storage — to save your data locally and import bank statements" data-ar="التخزين — لحفظ بياناتك محلياً واستيراد كشوف الحساب">Storage — to save your data locally and import bank statements</li>
-  </ul>
+      <!-- Budgets phone -->
+      <div class="app__gallery-item">
+        <div class="phone" aria-hidden="true">
+          <div class="phone__screen">
+            <div class="phone__status"><span>9:41</span><span></span></div>
+            <div class="phone__notch"></div>
+            <div class="phone__folio"><span>FOLIO · 14 · BUDGETS</span><span class="ar">الميزان</span></div>
+            <div class="phone__content">
+              <div class="ph-head">
+                <div>
+                  <div class="qw-eyebrow">Ramadan 1447 · Allotments</div>
+                  <div class="ph-head__title"><span class="en">Budgets</span><span class="ar">الميزان</span></div>
+                </div>
+                <div class="qw-margin">+ new</div>
+              </div>
+              <div class="ph-body">
+                <div class="ph-save">
+                  <div class="eyebrow">Savings · Hajj 1448</div>
+                  <div class="ar">ادخار · حج</div>
+                  <div class="ph-save__amt">
+                    <span class="big">2,840</span><span class="small">.500</span>
+                    <span class="of">of 5,000.000</span>
+                  </div>
+                  <div class="ph-save__bar"><i></i></div>
+                  <div class="ph-save__foot"><span>57% · saved</span><span>9 mo. at current pace</span></div>
+                </div>
+                <div class="ph-section-head"><span class="en">Monthly limits</span><span class="ar">الحدود الشهرية</span></div>
+                <div class="ph-cat-list" style="border-top: none; margin-top: 8px;">
+                  <div class="ph-cat"><div class="ph-cat__top"><div class="ph-cat__name"><span class="en">Groceries</span><span class="ar">بقالة</span></div><div class="ph-cat__amt">142.500<span class="lim">/ 250.000</span></div></div><div class="ph-cat__bar"><i style="width:57%"></i></div></div>
+                  <div class="ph-cat"><div class="ph-cat__top"><div class="ph-cat__name"><span class="en">Dining</span><span class="ar">مطاعم</span><span class="ph-badge">over</span></div><div class="ph-cat__amt over">196.000<span class="lim">/ 180.000</span></div></div><div class="ph-cat__bar"><i class="over" style="width:100%"></i></div></div>
+                  <div class="ph-cat"><div class="ph-cat__top"><div class="ph-cat__name"><span class="en">Transport</span><span class="ar">مواصلات</span></div><div class="ph-cat__amt">68.200<span class="lim">/ 90.000</span></div></div><div class="ph-cat__bar"><i style="width:76%"></i></div></div>
+                  <div class="ph-cat"><div class="ph-cat__top"><div class="ph-cat__name"><span class="en">Bills</span><span class="ar">فواتير</span></div><div class="ph-cat__amt">84.000<span class="lim">/ 120.000</span></div></div><div class="ph-cat__bar"><i style="width:70%"></i></div></div>
+                </div>
+              </div>
+              <div class="ph-nav">
+                <div class="ph-nav__item"><span class="dot"></span><span class="lab">Today</span></div>
+                <div class="ph-nav__item"><span class="dot"></span><span class="lab">Ledger</span></div>
+                <div class="ph-nav__item on"><span class="dot"></span><span class="lab">Budgets</span></div>
+                <div class="ph-nav__item"><span class="dot"></span><span class="lab">Insights</span></div>
+                <div class="ph-nav__item"><span class="dot"></span><span class="lab">More</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">ii · Budgets<span class="ar">حدود</span></div>
+      </div>
 
-  <h3 data-en="Cloud Backup" data-ar="النسخ الاحتياطي السحابي">Cloud Backup</h3>
-  <p data-en="Cloud backup is completely optional. If you choose to enable it, your data is encrypted on your device with AES-256 encryption using a passphrase only you know. The encrypted data is stored on Supabase. We cannot read your backup — only you can decrypt it with your passphrase." data-ar="النسخ الاحتياطي السحابي اختياري تماماً. إذا اخترت تفعيله، يتم تشفير بياناتك على جهازك بتشفير AES-256 باستخدام عبارة مرور تعرفها أنت فقط. البيانات المشفرة تُخزن على Supabase. لا نستطيع قراءة نسختك الاحتياطية — أنت فقط من يمكنه فك تشفيرها.">Cloud backup is completely optional. If you choose to enable it, your data is encrypted on your device with AES-256 encryption using a passphrase only you know. The encrypted data is stored on Supabase. We cannot read your backup — only you can decrypt it with your passphrase.</p>
-
-  <h3 data-en="No Ads, No Tracking" data-ar="بدون إعلانات، بدون تتبع">No Ads, No Tracking</h3>
-  <p data-en="Qawama has no advertisements, no analytics trackers, and no third-party advertising or analytics SDKs. Firebase is used solely for authentication and push notifications. We don't sell, share, or monetize your information in any way." data-ar="قواما لا تحتوي على إعلانات، ولا أدوات تتبع تحليلية، ولا أدوات إعلانية أو تحليلية خارجية. يُستخدم Firebase فقط للمصادقة والإشعارات. لا نبيع أو نشارك أو نستثمر معلوماتك بأي شكل.">Qawama has no advertisements, no analytics trackers, and no third-party advertising or analytics SDKs. Firebase is used solely for authentication and push notifications. We don't sell, share, or monetize your information in any way.</p>
-
-  <h3 data-en="Data Deletion" data-ar="حذف البيانات">Data Deletion</h3>
-  <p data-en='To learn how to delete your account or data, visit our <a href="delete-data.html">Data Deletion Policy</a>.' data-ar='لمعرفة كيفية حذف حسابك أو بياناتك، قم بزيارة <a href="delete-data-ar.html">سياسة حذف البيانات</a>.'>To learn how to delete your account or data, visit our <a href="delete-data.html">Data Deletion Policy</a>.</p>
-
-  <h3 data-en="Contact" data-ar="تواصل معنا">Contact</h3>
-  <p data-en='For questions or feedback, email us at <a href="mailto:qawama.app@gmail.com">qawama.app@gmail.com</a>' data-ar='للأسئلة أو الملاحظات، راسلنا على <a href="mailto:qawama.app@gmail.com">qawama.app@gmail.com</a>'>For questions or feedback, email us at <a href="mailto:qawama.app@gmail.com">qawama.app@gmail.com</a></p>
+      <!-- Onboarding phone -->
+      <div class="app__gallery-item">
+        <div class="phone" aria-hidden="true">
+          <div class="phone__screen">
+            <div class="phone__status"><span>9:41</span><span></span></div>
+            <div class="phone__notch"></div>
+            <div class="phone__folio"><span>QAWAMA · WELCOME</span><span class="ar">ابدأ بالقَوَام</span></div>
+            <div class="phone__content" style="padding-top: 0;">
+              <div class="ph-onb">
+                <div class="ph-onb__frame">
+                  <div class="ph-onb__head">
+                    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true">
+                      <g fill="none" stroke="#B8552E" stroke-width="0.8">
+                        <circle cx="16" cy="16" r="9"/>
+                        <circle cx="16" cy="16" r="13"/>
+                        <circle cx="27" cy="16" r="1.6" fill="#B8552E"/>
+                        <circle cx="23.78" cy="23.78" r="1.6" fill="#B8552E"/>
+                        <circle cx="16" cy="27" r="1.6" fill="#B8552E"/>
+                        <circle cx="8.22" cy="23.78" r="1.6" fill="#B8552E"/>
+                        <circle cx="5" cy="16" r="1.6" fill="#B8552E"/>
+                        <circle cx="8.22" cy="8.22" r="1.6" fill="#B8552E"/>
+                        <circle cx="16" cy="5" r="1.6" fill="#B8552E"/>
+                        <circle cx="23.78" cy="8.22" r="1.6" fill="#B8552E"/>
+                        <circle cx="16" cy="16" r="2" fill="#B8552E"/>
+                      </g>
+                    </svg>
+                    <div class="label">Al-Furqān · 25 : 67</div>
+                    <div class="ar">سورة الفرقان</div>
+                  </div>
+                  <p class="ph-onb__verse">
+                    وَالَّذِينَ إِذَا أَنفَقُوا<br/>
+                    لَمْ يُسْرِفُوا وَلَمْ يَقْتُرُوا<br/>
+                    وَكَانَ بَيْنَ ذَٰلِكَ <span class="accent">قَوَامًا</span>
+                  </p>
+                  <div class="ph-onb__div">
+                    <svg width="120" height="7" viewBox="0 0 120 7" aria-hidden="true">
+                      <line x1="0" y1="3.5" x2="46" y2="3.5" stroke="#A07C3E" stroke-width="0.6" opacity="0.55"/>
+                      <line x1="74" y1="3.5" x2="120" y2="3.5" stroke="#A07C3E" stroke-width="0.6" opacity="0.55"/>
+                      <rect x="49.5" y="1" width="5" height="5" fill="none" stroke="#A07C3E" stroke-width="0.8" transform="rotate(45 52 3.5)"/>
+                      <rect x="57.5" y="1" width="5" height="5" fill="none" stroke="#A07C3E" stroke-width="0.8" transform="rotate(45 60 3.5)"/>
+                      <rect x="65.5" y="1" width="5" height="5" fill="none" stroke="#A07C3E" stroke-width="0.8" transform="rotate(45 68 3.5)"/>
+                    </svg>
+                  </div>
+                  <p class="ph-onb__gloss">And those who, when they spend, are neither extravagant nor stingy, but maintain a just balance.</p>
+                </div>
+                <div class="ph-onb__below">
+                  <h1 class="ph-onb__h">Spend with <em>balance.</em></h1>
+                  <p class="ph-onb__p">A budgeting companion rooted in <em>qawām</em>.</p>
+                  <button class="ph-onb__btn">Begin <span class="ar">· ابدأ</span></button>
+                  <div class="ph-onb__dots"><i class="on"></i><i></i><i></i><i></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">iii · Welcome<span class="ar">ابدأ</span></div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- FOOTER -->
+<!-- =========================================================
+     WHAT IT DOES — folio v (six ledger entries)
+     ========================================================= -->
+<section class="features" id="features">
+  <div class="qw-page-header" style="margin-bottom: 56px;">
+    <span>What it does · ما يفعله</span>
+    <span style="color: var(--accent)">folio v</span>
+    <span>six entries</span>
+  </div>
+
+  <div class="features__title-row">
+    <div class="qw-eyebrow">Six entries</div>
+    <h2 class="features__title">Fewer features.<em> Better kept.</em></h2>
+  </div>
+
+  <div class="features__list">
+    <div class="features__row">
+      <span class="features__num">01</span>
+      <div>
+        <h3 class="features__heading">Reads your bank SMS</h3>
+        <span class="features__ar">قراءة الرسائل</span>
+      </div>
+      <p class="features__desc">Bank Muscat, NBO, Bank Dhofar, Sohar, Bank Nizwa, Alizz. Parsed on-device — never sent anywhere.</p>
+      <div class="features__motif"></div>
+    </div>
+    <div class="features__row">
+      <span class="features__num">02</span>
+      <div>
+        <h3 class="features__heading">Knows the merchants</h3>
+        <span class="features__ar">يعرف التجار</span>
+      </div>
+      <p class="features__desc">Built-in rules for hundreds of GCC merchants. Categorizes every transaction the moment it lands.</p>
+      <div class="features__motif"></div>
+    </div>
+    <div class="features__row">
+      <span class="features__num">03</span>
+      <div>
+        <h3 class="features__heading">Marks the qawām line</h3>
+        <span class="features__ar">يُعلِّم القَوَام</span>
+      </div>
+      <p class="features__desc">A single horizontal scale — extravagance · balance · restraint. You always know which side of the line you stand on.</p>
+      <div class="features__motif">
+        <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+          <path fill="none" stroke="#B8552E" stroke-width="1.2" stroke-linejoin="miter"
+            d="M11 0 L12.94 6.39 L18.94 3.22 L15.76 9.21 L22 11 L15.76 12.79 L18.94 18.78 L12.94 15.61 L11 22 L9.06 15.61 L3.06 18.78 L6.24 12.79 L0 11 L6.24 9.21 L3.06 3.22 L9.06 6.39 Z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="features__row">
+      <span class="features__num">04</span>
+      <div>
+        <h3 class="features__heading">Ledger for tithe &amp; gifts</h3>
+        <span class="features__ar">زكاة وهدايا</span>
+      </div>
+      <p class="features__desc">Mark transactions as ṣadaqah, zakāh, or family gift. Export at year&rsquo;s end — already classified, already legible.</p>
+      <div class="features__motif"></div>
+    </div>
+    <div class="features__row">
+      <span class="features__num">05</span>
+      <div>
+        <h3 class="features__heading">On-device first</h3>
+        <span class="features__ar">محلي أولًا</span>
+      </div>
+      <p class="features__desc">Your data stays on your phone. Optional encrypted backup uses a passphrase only you hold.</p>
+      <div class="features__motif">
+        <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+          <g fill="none" stroke="#A07C3E" stroke-width="1.2">
+            <rect x="4.4" y="4.4" width="13.2" height="13.2"/>
+            <rect x="4.4" y="4.4" width="13.2" height="13.2" transform="rotate(45 11 11)"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="features__row">
+      <span class="features__num">06</span>
+      <div>
+        <h3 class="features__heading">Bilingual, equal</h3>
+        <span class="features__ar">ثنائي اللغة</span>
+      </div>
+      <p class="features__desc">Arabic and English are first-class — same hierarchy, mirrored layouts, considered typography in both.</p>
+      <div class="features__motif"></div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     PRIVACY (slim folio)
+     ========================================================= -->
+<section class="privacy" id="privacy">
+  <div class="qw-page-header" style="margin-bottom: 56px;">
+    <span>Privacy · الخصوصية</span>
+    <span style="color: var(--accent)">folio vi</span>
+    <span>held by you, shared with no one</span>
+  </div>
+
+  <div class="privacy__title-row">
+    <div class="qw-eyebrow">A note on data</div>
+    <h2 class="privacy__title">Your ledger.<em> Your device.</em></h2>
+  </div>
+
+  <div class="privacy__list">
+    <div class="privacy__row">
+      <span class="privacy__num">01</span>
+      <div>
+        <h3 class="privacy__heading">Your data stays yours</h3>
+        <span class="privacy__ar">بياناتك ملكك</span>
+      </div>
+      <p class="privacy__desc">All financial data — transactions, budgets, categories — is stored locally on your device. We do not run servers that hold your records.</p>
+    </div>
+    <div class="privacy__row">
+      <span class="privacy__num">02</span>
+      <div>
+        <h3 class="privacy__heading">What the app touches</h3>
+        <span class="privacy__ar">ما يصل إليه</span>
+      </div>
+      <p class="privacy__desc">SMS — only bank transaction messages, parsed on-device. Network — only for exchange rates, Firebase authentication, and the optional encrypted backup. Storage — to save your data locally.</p>
+    </div>
+    <div class="privacy__row">
+      <span class="privacy__num">03</span>
+      <div>
+        <h3 class="privacy__heading">Encrypted cloud backup</h3>
+        <span class="privacy__ar">نسخ مشفّر</span>
+      </div>
+      <p class="privacy__desc">Backup is opt-in. When you enable it, your data is encrypted on-device with AES-256 using a passphrase only you know, then stored on Supabase. We cannot read it. Only you can decrypt it.</p>
+    </div>
+    <div class="privacy__row">
+      <span class="privacy__num">04</span>
+      <div>
+        <h3 class="privacy__heading">No ads. No tracking.</h3>
+        <span class="privacy__ar">بدون إعلانات</span>
+      </div>
+      <p class="privacy__desc">No advertisements, no analytics trackers, no third-party SDKs beyond Firebase for authentication and push. Your information is not sold, shared, or monetized.</p>
+    </div>
+    <div class="privacy__row">
+      <span class="privacy__num">05</span>
+      <div>
+        <h3 class="privacy__heading">Data deletion</h3>
+        <span class="privacy__ar">حذف البيانات</span>
+      </div>
+      <p class="privacy__desc">Delete your account from inside the app or by email. All deletion is immediate and final. See the <a href="delete-data.html">Data Deletion Policy</a> for the exact steps.</p>
+    </div>
+    <div class="privacy__row">
+      <span class="privacy__num">06</span>
+      <div>
+        <h3 class="privacy__heading">Reach us</h3>
+        <span class="privacy__ar">تواصل</span>
+      </div>
+      <p class="privacy__desc">Questions, corrections, deletion requests: <a href="mailto:qawama.app@gmail.com">qawama.app@gmail.com</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     COLOPHON / CTA
+     ========================================================= -->
+<section class="colophon" id="cta">
+  <div class="colophon__mark">
+    <svg width="36" height="36" viewBox="0 0 32 32" aria-hidden="true">
+      <g fill="none" stroke="#B8552E" stroke-width="0.8">
+        <circle cx="16" cy="16" r="9"/>
+        <circle cx="16" cy="16" r="13"/>
+        <circle cx="27" cy="16" r="1.6" fill="#B8552E"/>
+        <circle cx="23.78" cy="23.78" r="1.6" fill="#B8552E"/>
+        <circle cx="16" cy="27" r="1.6" fill="#B8552E"/>
+        <circle cx="8.22" cy="23.78" r="1.6" fill="#B8552E"/>
+        <circle cx="5" cy="16" r="1.6" fill="#B8552E"/>
+        <circle cx="8.22" cy="8.22" r="1.6" fill="#B8552E"/>
+        <circle cx="16" cy="5" r="1.6" fill="#B8552E"/>
+        <circle cx="23.78" cy="8.22" r="1.6" fill="#B8552E"/>
+        <circle cx="16" cy="16" r="2" fill="#B8552E"/>
+      </g>
+    </svg>
+  </div>
+  <div class="colophon__divider">
+    <svg width="160" height="7" viewBox="0 0 160 7" aria-hidden="true">
+      <line x1="0" y1="3.5" x2="58" y2="3.5" stroke="#A07C3E" stroke-width="0.6" opacity="0.55"/>
+      <line x1="102" y1="3.5" x2="160" y2="3.5" stroke="#A07C3E" stroke-width="0.6" opacity="0.55"/>
+      <rect x="63.5" y="1" width="5" height="5" fill="none" stroke="#A07C3E" stroke-width="0.8" transform="rotate(45 66 3.5)"/>
+      <rect x="77.5" y="1" width="5" height="5" fill="none" stroke="#A07C3E" stroke-width="0.8" transform="rotate(45 80 3.5)"/>
+      <rect x="91.5" y="1" width="5" height="5" fill="none" stroke="#A07C3E" stroke-width="0.8" transform="rotate(45 94 3.5)"/>
+    </svg>
+  </div>
+  <h2 class="colophon__title">Spend with <em>balance.</em></h2>
+  <p class="colophon__tag">إنفاق متوازن، حياة مباركة</p>
+  <div class="colophon__ctas">
+    <a class="btn btn--lg" href="#">Get on Google Play</a>
+  </div>
+</section>
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
 <footer class="footer">
-  <img src="data:image/png;base64,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" alt="Qawama" class="footer-logo">
-  <p data-en="© 2026 Qawama." data-ar="© 2026 قواما.">© 2026 Qawama.</p>
-  <div class="footer-links">
-    <a href="#privacy" data-en="Privacy Policy" data-ar="سياسة الخصوصية">Privacy Policy</a>
-    <a href="delete-data.html" data-en="Data Deletion" data-ar="حذف البيانات">Data Deletion</a>
-    <a href="mailto:qawama.app@gmail.com" data-en="Contact" data-ar="تواصل">Contact</a>
+  <div class="footer__brand">
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <path fill="none" stroke="#B8552E" stroke-width="1.2" stroke-linejoin="miter"
+        d="M8 0 L9.4 4.65 L13.78 2.34 L11.47 6.72 L16 8 L11.47 9.28 L13.78 13.66 L9.4 11.35 L8 16 L6.6 11.35 L2.22 13.66 L4.53 9.28 L0 8 L4.53 6.72 L2.22 2.34 L6.6 4.65 Z"/>
+    </svg>
+    <span class="word">&copy; 2026 Qawama</span>
+    <span class="ar">قواما</span>
+  </div>
+  <div class="footer__center">made with consideration · Sultanate of Oman</div>
+  <div class="footer__links">
+    <a href="#privacy">Privacy</a>
+    <a href="delete-data.html">Data deletion</a>
+    <a href="mailto:qawama.app@gmail.com">Contact</a>
   </div>
 </footer>
 
 <script>
-  let isArabic = false;
+  // EN/ع toggle — swaps primary script class on <html>
+  // Always-bilingual labels stay visible; long-form prose with data-en/data-ar swaps content.
+  (function () {
+    var html = document.documentElement;
+    var primary = "en";
 
-  function toggleLang() {
-    isArabic = !isArabic;
-    document.documentElement.lang = isArabic ? 'ar' : 'en';
-    document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+    function applyProse() {
+      document.querySelectorAll("[data-en][data-ar]").forEach(function (el) {
+        var t = primary === "ar" ? el.getAttribute("data-ar") : el.getAttribute("data-en");
+        if (!t) return;
+        if (t.indexOf("<") !== -1) el.innerHTML = t; else el.textContent = t;
+      });
+    }
 
-    document.querySelector('.lang-toggle').textContent = isArabic ? 'English' : 'العربية';
-
-    // Swap text content
-    document.querySelectorAll('[data-en][data-ar]').forEach(function(el) {
-      var text = isArabic ? el.getAttribute('data-ar') : el.getAttribute('data-en');
-      if (text && text.includes('<')) {
-        el.innerHTML = text;
-      } else if (text) {
-        el.textContent = text;
-      }
-    });
-
-    // Swap phone screenshots
-    document.getElementById('phone-screen1').src = isArabic ? 'screen1_ar.jpeg' : 'screen1.jpeg';
-    document.getElementById('phone-screen2').src = isArabic ? 'screen2_ar.jpeg' : 'screen2.jpeg';
-  }
+    window.toggleScript = function () {
+      primary = primary === "en" ? "ar" : "en";
+      html.setAttribute("data-script", primary);
+      html.setAttribute("lang", primary === "ar" ? "ar" : "en");
+      var btn = document.querySelector(".lang-toggle");
+      if (btn) btn.textContent = primary === "ar" ? "ع · EN" : "EN · ع";
+      applyProse();
+    };
+  })();
 </script>
 </body>
 </html>
